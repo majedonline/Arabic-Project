@@ -5,155 +5,169 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>منصّة إعداد امتحانات اللغة العربية</title>
 
-    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
+
 
   <style>
     /* الألوان الأساسيّة والتصميم الحديث */
     :root {
-      --primary-color: #004d40; /* أخضر داكن جدًّا */
-      --secondary-color: #00796b; /* أخضر فيروزي */
-      --accent-color: #388e3c; /* أخضر متوسط */
-      --background-color: #e0f2f1; /* خلفية فاتحة جدًّا مائلة للأخضر */
+      --primary-color: #2c3e50; /* أزرق داكن جدًّا للعناوين والنصوص الرئيسية */
+      --secondary-color: #3498db; /* أزرق فاتح للأزرار المميزة والحدود */
+      --accent-color: #2ecc71; /* أخضر زاهي لزر الإضافة */
+      --background-color: #ecf0f1; /* خلفية فاتحة جدًّا */
       --card-background: #ffffff; /* خلفية البطاقات بيضاء */
-      --text-color: #212121; /* نصّ داكن */
-      --border-color: #b2dfdb; /* لون الحدود الفاتح */
-      --button-hover: #004d40; /* لون الأزرار عند التمرير */
-      --success-color: #4CAF50; /* لون النجاح */
-      --error-color: #f44336; /* لون الخطأ */
-      --shadow-light: rgba(0, 0, 0, 0.1);
+      --text-color: #34495e; /* نصّ رماديّ داكن */
+      --border-color: #bdc3c7; /* لون حدود رماديّ فاتح */
+      --hover-color: #2980b9; /* لون التمرير للأزرار الزرقاء */
+      --add-hover-color: #27ae60; /* لون التمرير لزر الإضافة */
+      --success-color: #28a745; /* لون النجاح */
+      --error-color: #dc3545; /* لون الخطأ */
+      --shadow-light: rgba(0, 0, 0, 0.08);
       --shadow-medium: rgba(0, 0, 0, 0.15);
     }
 
     body {
-      font-family: 'Simplified Arabic', 'Amiri', serif, sans-serif; /* تفضيل Simplified Arabic ثم Amiri */
+      font-family: 'Cairo', 'Amiri', 'Simplified Arabic', serif, sans-serif; /* تفضيل Cairo ثم Amiri ثم Simplified Arabic */
       background: var(--background-color);
-      padding: 20px;
+      padding: 30px;
       color: var(--text-color);
-      line-height: 1.7;
+      line-height: 1.8;
       direction: rtl;
       text-align: right;
       margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
+      min-height: 100vh; /* لتوسيط المحتوى عموديًّا */
     }
 
     .container {
-      max-width: 900px; /* تحديد عرض أقصى للمحتوى */
+      max-width: 960px; /* زيادة العرض الأقصى للمحتوى */
       width: 100%;
       background: var(--card-background);
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 8px 25px var(--shadow-medium);
+      padding: 40px; /* زيادة البادينغ */
+      border-radius: 15px; /* حواف أكثر دائرية */
+      box-shadow: 0 10px 30px var(--shadow-medium); /* ظلّ أوضح */
       margin-bottom: 30px;
     }
 
     h1 {
       text-align: center;
-      font-size: 32px;
-      margin-bottom: 30px;
+      font-size: 38px; /* حجم أكبر للعنوان الرئيسي */
+      margin-bottom: 35px;
       color: var(--primary-color);
       font-weight: 700;
-      border-bottom: 3px solid var(--secondary-color);
-      padding-bottom: 15px;
+      border-bottom: 4px solid var(--secondary-color); /* خطّ سميك تحت العنوان */
+      padding-bottom: 18px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
     }
 
     label {
       display: block;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-weight: bold;
       color: var(--primary-color);
-      font-size: 17px;
+      font-size: 18px; /* حجم أكبر للتسميات */
     }
 
     textarea, select {
       width: 100%;
-      padding: 12px 15px;
+      padding: 15px 18px; /* زيادة البادينغ داخل حقول الإدخال */
       font-size: 16px;
-      font-family: 'Simplified Arabic', 'Amiri', serif, sans-serif;
+      font-family: 'Cairo', 'Amiri', 'Simplified Arabic', serif, sans-serif;
       border: 1px solid var(--border-color);
-      border-radius: 8px;
-      margin-bottom: 15px;
+      border-radius: 10px; /* حواف أكثر دائرية */
+      margin-bottom: 18px;
       box-sizing: border-box;
-      background-color: #fcfcfc;
+      background-color: #fcfdff;
       color: var(--text-color);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    textarea:focus, select:focus {
+      border-color: var(--secondary-color);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); /* ظلّ خفيف عند التركيز */
+      outline: none;
     }
 
     textarea#mainText {
-      min-height: 200px; /* حجم أكبر لمربع النص الرئيسي */
+      min-height: 250px; /* زيادة حجم مربع النص الرئيسي بشكل كبير */
       resize: vertical;
     }
 
     .word-count {
-      text-align: left; /* عدد الكلمات من اليسار */
-      font-size: 14px;
+      text-align: left;
+      font-size: 15px;
       color: #7f8c8d;
       margin-top: -10px;
       margin-bottom: 25px;
-      direction: ltr; /* لضمان ظهور النصّ الإنجليزيّ بشكل صحيح */
+      direction: ltr;
     }
 
     .question-container {
       border: 1px solid var(--border-color);
-      padding: 20px;
-      margin-bottom: 20px;
+      padding: 25px; /* زيادة البادينغ */
+      margin-bottom: 25px;
       background: var(--card-background);
-      border-radius: 10px;
-      box-shadow: 0 4px 15px var(--shadow-light);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px var(--shadow-light);
       position: relative;
     }
 
     .question-container label {
       font-weight: normal;
       color: var(--primary-color);
-      font-size: 16px;
+      font-size: 17px;
     }
 
     .question-container textarea {
-      font-size: 15px; /* حجم خطّ الأسئلة */
-      margin-bottom: 10px;
+      font-size: 15px;
+      margin-bottom: 12px;
+      min-height: 80px; /* ارتفاع أدنى لخانة السؤال */
     }
 
     .question-options {
       display: flex;
-      gap: 20px; /* مسافة بين قائمة النوع وخانة الدرجة */
-      margin-top: 10px;
+      gap: 25px;
+      margin-top: 15px;
       align-items: center;
+      flex-wrap: wrap; /* للسماح بالعناصر بالنزول لسطر جديد */
     }
 
     .question-options > div {
-      flex: 1; /* لجعل كلّ عنصر يأخذ مساحة متساوية */
+      flex: 1;
+      min-width: 180px; /* ضمان عرض أدنى للخانات */
     }
 
     .question-options select {
-      width: auto; /* لجعل العرض مناسبًا للمحتوى */
-      min-width: 150px;
+      width: auto;
+      min-width: 100%;
       margin-bottom: 0;
-      padding-right: 30px; /* مسافة لأيقونة السهم */
-      appearance: none;
-      background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23004d40%22%20d%3D%22M287%2C197.3L159.1%2C69.5c-3-3-7.6-3-10.6%2C0L5.3%2C197.3c-3%2C3-3%2C7.6%2C0%2C10.6l21.2%2C21.2c3%2C3%2C7.6%2C3%2C10.6%2C0l114.4-114.4c3-3%2C7.6-3%2C10.6%2C0l114.4%2C114.4c3%2C3%2C7.6%2C3%2C10.6%2C0l21.2-21.2C290%2C204.9%2C290%2C200.3%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E') no-repeat right 10px center / 12px;
+      padding-right: 35px; /* مسافة لأيقونة السهم */
+      appearance: none; /* إخفاء سهم المتصفح الافتراضي */
+      background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232c3e50%22%20d%3D%22M287%2C197.3L159.1%2C69.5c-3-3-7.6-3-10.6%2C0L5.3%2C197.3c-3%2C3-3%2C7.6%2C0%2C10.6l21.2%2C21.2c3%2C3%2C7.6%2C3%2C10.6%2C0l114.4-114.4c3-3%2C7.6-3%2C10.6%2C0l114.4%2C114.4c3%2C3%2C7.6%2C3%2C10.6%2C0l21.2-21.2C290%2C204.9%2C290%2C200.3%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E') no-repeat right 12px center / 14px;
       cursor: pointer;
     }
 
-
     button {
-      padding: 12px 25px;
+      padding: 14px 30px; /* حجم أكبر للأزرار */
       background: var(--secondary-color);
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px; /* حواف أكثر دائرية */
       cursor: pointer;
-      font-size: 17px;
+      font-size: 18px; /* حجم خطّ أكبر للأزرار */
       font-weight: bold;
       transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
       margin-left: 15px;
-      box-shadow: 0 4px 10px var(--shadow-light);
+      box-shadow: 0 5px 15px var(--shadow-light);
     }
 
     button:hover {
-      background: var(--button-hover);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px var(--shadow-medium);
+      background: var(--hover-color);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px var(--shadow-medium);
     }
 
     button:active {
@@ -163,54 +177,57 @@
 
     #addQuestionBtn {
       background: var(--accent-color);
-      margin-top: 20px;
-      margin-bottom: 20px;
+      margin-top: 25px;
+      margin-bottom: 25px;
     }
 
     #addQuestionBtn:hover {
-      background: #2e7d32; /* درجة أغمق للأخضر */
+      background: var(--add-hover-color);
     }
 
     .actions {
       margin-top: 30px;
       display: flex;
       justify-content: flex-start;
-      flex-wrap: wrap; /* للسماح للأزرار بالنزول لسطر جديد على الشاشات الصغيرة */
-      gap: 10px; /* مسافة بين الأزرار */
+      flex-wrap: wrap;
+      gap: 15px; /* مسافة أكبر بين الأزرار */
     }
 
     #preview {
       background: var(--card-background);
-      padding: 35px;
+      padding: 40px;
       margin-top: 35px;
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      font-family: 'Simplified Arabic', 'Amiri', serif;
+      border-radius: 15px;
+      font-family: 'Amiri', serif; /* استخدام Amiri للمعاينه لثبات التنسيق */
       font-size: 16px;
-      min-height: 250px;
-      box-shadow: 0 8px 25px var(--shadow-medium);
+      min-height: 300px; /* ارتفاع أدنى أكبر للمعاينه */
+      box-shadow: 0 10px 30px var(--shadow-medium);
     }
 
     #preview h2 {
       text-align: right;
-      font-size: 24px; /* حجم أكبر لعناوين المعاينة */
+      font-size: 28px; /* حجم أكبر لعناوين المعاينة */
       color: var(--primary-color);
       margin-bottom: 20px;
-      border-bottom: 2px solid var(--secondary-color);
-      padding-bottom: 8px;
+      border-bottom: 3px solid var(--secondary-color);
+      padding-bottom: 10px;
       display: inline-block;
+      font-weight: 700;
     }
 
     #preview p {
-      margin-bottom: 15px;
-      line-height: 2;
-      text-align: justify; /* ضبط النص في المعاينة */
+      margin-bottom: 18px; /* مسافة أكبر بين الفقرات */
+      line-height: 2.2; /* تباعد أسطر أكبر */
+      text-align: justify;
       font-size: 16px; /* خط النص الرئيسي */
+      font-family: 'Amiri', serif;
     }
 
     #preview p.question-text {
       font-size: 14px; /* خط الأسئلة */
-      line-height: 1.8;
+      line-height: 2;
+      font-family: 'Amiri', serif;
     }
 
     .delete-question-btn {
@@ -218,16 +235,23 @@
       border: none;
       color: var(--error-color);
       cursor: pointer;
-      font-size: 24px;
+      font-size: 26px; /* حجم أكبر لزر الحذف */
       position: absolute;
-      top: 10px;
-      left: 10px;
+      top: 15px;
+      left: 15px;
       padding: 5px;
       transition: color 0.3s ease, transform 0.2s ease;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .delete-question-btn:hover {
-      color: #c62828;
+      color: #b30000;
+      background-color: rgba(220, 53, 69, 0.1); /* خلفية خفيفة عند التمرير */
       transform: scale(1.1);
     }
 
@@ -238,54 +262,49 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.7);
+      background: rgba(44, 62, 80, 0.9); /* لون داكن أكثر */
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 9999;
       color: white;
-      font-size: 22px;
+      font-size: 24px;
       flex-direction: column;
-      gap: 20px;
-      backdrop-filter: blur(5px); /* تأثير ضبابي للخلفية */
+      gap: 25px;
+      backdrop-filter: blur(8px); /* تأثير ضبابي أقوى */
     }
 
     .spinner {
-      border: 5px solid rgba(255, 255, 255, 0.3);
-      border-top: 5px solid white;
+      border: 6px solid rgba(255, 255, 255, 0.3);
+      border-top: 6px solid white;
       border-radius: 50%;
-      width: 50px;
-      height: 50px;
+      width: 60px;
+      height: 60px;
       animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
     }
 
     /* رسائل الإشعارات */
     .notification {
       position: fixed;
-      top: 20px;
+      top: 30px; /* أعلى قليلاً */
       left: 50%;
       transform: translateX(-50%);
       background-color: var(--success-color);
       color: white;
-      padding: 15px 30px;
-      border-radius: 10px;
-      box-shadow: 0 6px 15px var(--shadow-medium);
+      padding: 18px 35px; /* بادينغ أكبر */
+      border-radius: 12px;
+      box-shadow: 0 8px 20px var(--shadow-medium);
       z-index: 10000;
       opacity: 0;
       transition: opacity 0.5s ease-in-out, top 0.5s ease;
-      min-width: 300px;
+      min-width: 350px;
       text-align: center;
       font-weight: bold;
     }
 
     .notification.show {
       opacity: 1;
-      top: 30px;
+      top: 50px; /* تظهر من أعلى بشكل أجمل */
     }
     .notification.error {
       background-color: var(--error-color);
@@ -342,7 +361,7 @@
     <h1>منصّة إعداد امتحانات اللغة العربيّة</h1>
 
     <label for="mainText">النصّ:</label>
-    <textarea id="mainText" rows="10" placeholder="ألصق النصّ هنا..."></textarea>
+    <textarea id="mainText" rows="12" placeholder="ألصق النصّ هنا..."></textarea>
     <div class="word-count">الكلمات: <span id="wordCount">0</span> / 300</div>
 
     <div id="questions"></div>
@@ -366,7 +385,7 @@
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <script>
-    const questions = []; // مصفوفة لتخزين عناصر الأسئلة
+    const questions = [];
     const mainTextarea = document.getElementById('mainText');
     const wordCountSpan = document.getElementById('wordCount');
     const questionsContainer = document.getElementById('questions');
@@ -376,7 +395,6 @@
 
     const MAX_WORDS = 300;
 
-    // تحديث عدّاد الكلمات
     mainTextarea.addEventListener('input', updateWordCount);
 
     function updateWordCount() {
@@ -387,7 +405,6 @@
       wordCountSpan.textContent = currentWordCount;
 
       if (currentWordCount > MAX_WORDS) {
-        // قصّ النصّ إذا تجاوز الحدّ الأقصى للكلمات
         mainTextarea.value = words.slice(0, MAX_WORDS).join(' ');
         wordCountSpan.textContent = MAX_WORDS;
         showNotification('تمّ تجاوز الحدّ الأقصى للكلمات (300 كلمة).', 'error');
@@ -402,7 +419,7 @@
       qLabel.textContent = 'السؤال:';
       const qText = document.createElement('textarea');
       qText.placeholder = 'اكتب السؤال هنا...';
-      qText.rows = 2;
+      qText.rows = 3; /* زيادة حجم خانة السؤال */
 
       const optionsDiv = document.createElement('div');
       optionsDiv.className = 'question-options';
@@ -436,10 +453,9 @@
       optionsDiv.appendChild(typeDiv);
       optionsDiv.appendChild(gradeDiv);
 
-
       const deleteBtn = document.createElement('button');
       deleteBtn.className = 'delete-question-btn no-print';
-      deleteBtn.innerHTML = '&times;'; // رمز X
+      deleteBtn.innerHTML = '&times;';
       deleteBtn.title = 'حذف السؤال';
       deleteBtn.onclick = () => deleteQuestion(container);
 
@@ -467,7 +483,7 @@
       const words = mainText.split(/\s+/).filter(word => word.length > 0);
       const limitedText = words.slice(0, MAX_WORDS).join(' ');
 
-      if (!limitedText && questions.length === 0) {
+      if (!limitedText && questions.filter(q => q.text.value.trim()).length === 0) {
         document.getElementById('preview').innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 50px;">الرجاء إضافة نصّ أو أسئلة للمعاينة.</p>';
         showNotification('لا يوجد محتوى للمعاينة. الرجاء إضافة نصّ أو أسئلة.', 'error');
         return;
@@ -475,38 +491,36 @@
 
       let html = '';
       if (limitedText) {
-        html += `<h2 style="font-family:'Simplified Arabic', 'Amiri', serif; font-weight: 700;">النصّ:</h2><p style="font-size:16px; font-family:'Simplified Arabic', 'Amiri', serif; text-align: justify;">${limitedText}</p>`;
+        html += `<h2 style="font-family:'Amiri', serif; font-weight: 700;">النصّ:</h2><p style="font-size:16px; font-family:'Amiri', serif; text-align: justify;">${limitedText}</p>`;
       }
 
       if (questions.length > 0) {
-        html += `<h2 style="font-family:'Simplified Arabic', 'Amiri', serif; font-weight: 700;">الأسئلة:</h2>`;
+        html += `<h2 style="font-family:'Amiri', serif; font-weight: 700;">الأسئلة:</h2>`;
         let questionNumber = 0;
         questions.forEach((q) => {
           if (q.text.value.trim()) {
             questionNumber++;
-            html += `<p class="question-text" style="font-size:14px; font-family:'Simplified Arabic', 'Amiri', serif; margin-bottom: 15px;"><strong>${questionNumber}. (${q.grade.value} درجات):</strong> ${q.text.value}</p>`;
+            html += `<p class="question-text" style="font-size:14px; font-family:'Amiri', serif; margin-bottom: 15px;"><strong>${questionNumber}. (${q.grade.value} درجات):</strong> ${q.text.value}</p>`;
           }
         });
         if (questionNumber === 0 && !limitedText) {
           html = '<p style="text-align: center; color: #7f8c8d; padding: 50px;">الرجاء إضافة نصّ أو أسئلة للمعاينة.</p>';
           showNotification('لا يوجد محتوى للمعاينة. الرجاء إضافة نصّ أو أسئلة.', 'error');
         } else if (questionNumber === 0 && limitedText) {
-          // If only text, but no valid questions
           showNotification('تمّ تحديث المعاينة. لم تتمّ إضافة أيّ أسئلة صالحة.', 'info');
         }
       }
 
       document.getElementById('preview').innerHTML = html;
-      if (limitedText || questionNumber > 0) {
+      if (limitedText || questions.filter(q => q.text.value.trim()).length > 0) {
         showNotification('تمّ تحديث المعاينة بنجاح!', 'success');
       }
     }
 
     async function exportDocument(type) {
-      generatePreview(); // تحديث المعاينة قبل التصدير
+      generatePreview();
 
       const previewElement = document.getElementById('preview');
-      // Check for actual content, not just a placeholder message
       if (!previewElement.innerHTML || previewElement.innerHTML.includes('الرجاء إضافة نصّ')) {
         showNotification('لا يوجد محتوى لتصديره. الرجاء إضافة نصّ أو أسئلة.', 'error');
         return;
@@ -526,7 +540,6 @@
           await html2pdf().set(opt).from(previewElement).save();
           showNotification('تمّ تحميل ملفّ PDF بنجاح!');
         } else if (type === 'word') {
-          // Include Simplified Arabic as the primary font and Amiri as fallback
           const header = `
             <html xmlns:o='urn:schemas-microsoft-com:office:office'
                   xmlns:w='urn:schemas-microsoft-com:office:word'
@@ -536,7 +549,7 @@
               <title>امتحان اللغة العربية</title>
               <style>
                 body { font-family: 'Simplified Arabic', 'Amiri', serif; direction: rtl; text-align: right; margin: 20px; }
-                h1 { text-align: center; font-size: 28px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid #00796b; padding-bottom: 10px; }
+                h1 { text-align: center; font-size: 28px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
                 h2 { text-align: right; font-size: 22px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
                 p { margin-bottom: 10px; line-height: 1.8; text-align: justify; font-size: 16px; }
                 p.question-text { font-size: 14px; line-height: 1.6; }
@@ -544,7 +557,7 @@
               </style>
             </head><body>`;
           const footer = "</body></html>";
-          const content = previewElement.innerHTML; // هنا سيتم تضمين المحتوى المنسق ديناميكيا
+          const content = previewElement.innerHTML;
           const sourceHTML = header + content + footer;
 
           const blob = new Blob(['\ufeff', sourceHTML], {type: 'application/msword;charset=utf-8'});
@@ -583,10 +596,9 @@
       notificationElement.className = `notification show ${type}`;
       setTimeout(() => {
         notificationElement.className = `notification`;
-      }, 3000); // إخفاء الإشعار بعد 3 ثوانٍ
+      }, 3000);
     }
 
-    // تهيئة عداد الكلمات عند تحميل الصفحة
     document.addEventListener('DOMContentLoaded', updateWordCount);
   </script>
 </body>
