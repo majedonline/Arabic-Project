@@ -1,194 +1,631 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <title>منصّة إعداد امتحانات اللغة العربية</title>
-  <style>
-    body {
-      font-family: 'Simplified Arabic', 'Arial', sans-serif;
-      background: linear-gradient(to bottom, #e8f0ff, #f9fbff);
-      padding: 30px;
-      color: #333;
-      line-height: 1.8;
-    }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>منصّة إعداد امتحانات اللغة العربية</title>
 
-    h1 {
-      text-align: center;
-      font-size: 26px;
-      color: #2c3e50;
-      margin-bottom: 30px;
-      font-weight: bold;
-      text-shadow: 1px 1px 2px #ccc;
-    }
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
 
-    label {
-      display: block;
-      font-size: 18px;
-      margin-bottom: 10px;
-      color: #2c3e50;
-      font-weight: bold;
-    }
+  <style>
+    /* الألوان الأساسيّة والتصميم الأنيق */
+    :root {
+      --primary-dark: #2c3e50; /* للعناوين والنصوص الرئيسية */
+      --secondary-blue: #3498db; /* للأزرار والخطوط المميزة */
+      --accent-green: #2ecc71; /* لزر الإضافة */
+      --background-light: #e8f0ff; /* خلفية فاتحة كما في تصميمك */
+      --card-background: #ffffff; /* خلفية البطاقات */
+      --text-muted: #7f8c8d; /* للنصوص الثانوية وعداد الكلمات */
+      --border-color: #dbe4e6; /* لون خفيف للحدود */
+      --hover-dark-blue: #2980b9; /* زر التمرير */
+      --add-hover-dark-green: #27ae60; /* زر الإضافة عند التمرير */
+      --success-color: #28a745;
+      --error-color: #dc3545;
+      --shadow-soft: rgba(0, 0, 0, 0.08);
+      --shadow-medium: rgba(0, 0, 0, 0.15);
+    }
 
-    textarea {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      font-family: 'Simplified Arabic', 'Arial', sans-serif;
-      margin-bottom: 20px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-      resize: vertical;
-    }
+    /* إعادة تعيين أساسيّة */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    .question {
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 15px;
-      background: #ffffff;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
-    }
+    body {
+      font-family: 'Cairo', sans-serif, 'Amiri', serif, 'Simplified Arabic'; /* Cairo هو الخطّ الأوّل الآن */
+      background: var(--background-light); /* استخدام اللون من تصميمك */
+      color: var(--primary-dark);
+      line-height: 1.8;
+      direction: rtl;
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px; /* بادينغ شامل للجسم */
+      min-height: 100vh;
+    }
 
-    .question select,
-    .question textarea {
-      width: 100%;
-      margin-top: 8px;
-      font-size: 15px;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 6px;
-      box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
-    }
+    .container {
+      max-width: 960px; /* الحفاظ على عرض معقول */
+      width: 100%;
+      background: var(--card-background);
+      padding: 30px 40px; /* بادينغ محسّن للحاويات */
+      border-radius: 12px; /* حواف أكثر دائرية للجاذبية */
+      box-shadow: 0 8px 25px var(--shadow-soft); /* ظلّ أكثر بروزًا */
+      margin-bottom: 30px; /* مسافة أكبر بين الحاويات */
+    }
 
-    button {
-      padding: 10px 20px;
-      background: linear-gradient(to right, #3498db, #2980b9);
-      color: white;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 15px;
-      margin: 5px;
-      transition: background 0.3s ease;
-    }
+    h1 {
+      text-align: center;
+      font-size: 38px; /* حجم أكبر للعنوان الرئيسي */
+      margin-bottom: 35px;
+      color: var(--primary-dark);
+      font-weight: 700;
+      border-bottom: 4px solid var(--secondary-blue); /* خطّ سميك ومميز */
+      padding-bottom: 18px;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+    }
 
-    button:hover {
-      background: linear-gradient(to right, #2980b9, #2471a3);
-    }
+    label {
+      display: block;
+      margin-bottom: 12px; /* مسافة أكبر تحت التسميات */
+      font-weight: bold;
+      color: var(--primary-dark);
+      font-size: 18px; /* حجم أكبر لتسميات الحقول */
+    }
 
-    .actions {
-      margin-top: 20px;
-      text-align: center;
-    }
+    textarea, select {
+      width: 100%;
+      padding: 15px 18px; /* زيادة البادينغ داخل حقول الإدخال */
+      font-size: 16px; /* خطّ النصّ في الإدخال */
+      font-family: 'Cairo', sans-serif, 'Amiri', serif, 'Simplified Arabic';
+      border: 1px solid var(--border-color);
+      border-radius: 10px; /* حواف أكثر دائرية للحقول */
+      margin-bottom: 18px; /* مسافة تحت الحقول */
+      box-sizing: border-box;
+      background-color: #fcfdff;
+      color: var(--primary-dark);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
 
-    #preview {
-      background: white;
-      padding: 25px;
-      margin-top: 40px;
-      border: 1px solid #ccc;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    }
+    textarea:focus, select:focus {
+      border-color: var(--secondary-blue);
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); /* ظلّ التركيز أوضح */
+      outline: none;
+    }
 
-    h2 {
-      color: #2e4053;
-      font-size: 20px;
-      border-bottom: 1px solid #ccc;
-      padding-bottom: 5px;
-      margin-top: 30px;
-    }
+    textarea#mainText {
+      min-height: 250px; /* حجم مربع النصّ الرئيسيّ */
+      resize: vertical;
+    }
 
-    @media print {
-      body {
-        background: white;
-        padding: 0;
-      }
-      .no-print {
-        display: none;
-      }
-      #preview {
-        border: none;
-        padding: 0;
-      }
-    }
-  </style>
+    .word-count {
+      text-align: left;
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: -10px;
+      margin-bottom: 25px;
+      direction: ltr; /* لضمان ظهور الرقم والكلمات بشكل صحيح */
+      font-weight: 500;
+    }
+
+    .question-container {
+      border: 1px solid var(--border-color);
+      padding: 25px; /* بادينغ داخل مربعات الأسئلة */
+      margin-bottom: 25px;
+      background: var(--card-background);
+      border-radius: 12px;
+      box-shadow: 0 5px 20px var(--shadow-soft);
+      position: relative;
+    }
+
+    .question-container label {
+      font-weight: normal;
+      color: var(--primary-dark);
+      font-size: 17px;
+    }
+
+    .question-container textarea {
+      font-size: 15px;
+      margin-bottom: 12px;
+      min-height: 80px; /* ارتفاع أدنى لخانة السؤال */
+    }
+
+    .question-options {
+      display: flex;
+      gap: 25px; /* مسافة بين خيارات السؤال */
+      margin-top: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .question-options > div {
+      flex: 1;
+      min-width: 180px; /* عرض أدنى لخيارات الدرجة والنوع */
+    }
+
+    .question-options select {
+      width: auto;
+      min-width: 100%;
+      margin-bottom: 0;
+      padding-right: 35px; /* مسافة لأيقونة السهم */
+      appearance: none;
+      background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232c3e50%22%20d%3D%22M287%2C197.3L159.1%2C69.5c-3-3-7.6-3-10.6%2C0L5.3%2C197.3c-3%2C3-3%2C7.6%2C0%2C10.6l21.2%2C21.2c3%2C3%2C7.6%2C3%2C10.6%2C0l114.4-114.4c3-3%2C7.6-3%2C10.6%2C0l114.4%2C114.4c3%2C3%2C7.6%2C3%2C10.6%2C0l21.2-21.2C290%2C204.9%2C290%2C200.3%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E') no-repeat right 12px center / 14px;
+      cursor: pointer;
+    }
+
+    button {
+      padding: 14px 30px; /* حجم أكبر للأزرار */
+      background: linear-gradient(to right, var(--secondary-blue), var(--hover-dark-blue)); /* استخدام تدرج لوني */
+      color: white;
+      border: none;
+      border-radius: 10px; /* حواف أكثر دائرية للأزرار */
+      cursor: pointer;
+      font-size: 18px; /* حجم خطّ أكبر للأزرار */
+      font-weight: bold;
+      transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+      margin-left: 15px; /* مسافة بين الأزرار */
+      box-shadow: 0 5px 15px var(--shadow-soft);
+    }
+
+    button:hover {
+      background: linear-gradient(to right, var(--hover-dark-blue), #2471a3);
+      transform: translateY(-3px); /* رفع الزرّ قليلاً عند التمرير */
+      box-shadow: 0 8px 20px var(--shadow-medium);
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 5px var(--shadow-soft);
+    }
+
+    #addQuestionBtn {
+      background: linear-gradient(to right, var(--accent-green), var(--add-hover-dark-green));
+      margin-top: 25px;
+      margin-bottom: 25px;
+    }
+
+    #addQuestionBtn:hover {
+      background: linear-gradient(to right, var(--add-hover-dark-green), #249755);
+    }
+
+    .actions {
+      margin-top: 30px; /* مسافة أكبر فوق أزرار الإجراءات */
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 15px; /* مسافة بين أزرار الإجراءات */
+    }
+
+    #preview {
+      background: var(--card-background);
+      padding: 40px;
+      margin-top: 35px;
+      border: 1px solid var(--border-color);
+      border-radius: 15px;
+      font-family: 'Amiri', serif; /* استخدام Amiri للمعاينه لثبات التنسيق */
+      font-size: 16px;
+      min-height: 300px; /* ارتفاع أدنى أكبر للمعاينه */
+      box-shadow: 0 10px 30px var(--shadow-medium);
+    }
+
+    #preview h2 {
+      text-align: right;
+      font-size: 28px; /* حجم أكبر لعناوين المعاينة */
+      color: var(--primary-dark);
+      margin-bottom: 20px;
+      border-bottom: 3px solid var(--secondary-blue);
+      padding-bottom: 10px;
+      display: inline-block;
+      font-weight: 700;
+    }
+
+    #preview p {
+      margin-bottom: 18px;
+      line-height: 2.2; /* تباعد أسطر أكبر */
+      text-align: justify;
+      font-size: 16px; /* خط النص الرئيسي */
+      font-family: 'Amiri', serif;
+    }
+
+    #preview p.question-text {
+      font-size: 14px; /* خط الأسئلة */
+      line-height: 2;
+      font-family: 'Amiri', serif;
+    }
+
+    .delete-question-btn {
+      background: none;
+      border: none;
+      color: var(--error-color);
+      cursor: pointer;
+      font-size: 26px; /* حجم أكبر لزر الحذف */
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      padding: 5px;
+      transition: color 0.3s ease, transform 0.2s ease;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .delete-question-btn:hover {
+      color: #b30000;
+      background-color: rgba(220, 53, 69, 0.1); /* خلفية خفيفة عند التمرير */
+      transform: scale(1.1);
+    }
+
+    /* مؤشر التحميل */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(44, 62, 80, 0.9); /* لون داكن أكثر */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: white;
+      font-size: 24px;
+      flex-direction: column;
+      gap: 25px;
+      backdrop-filter: blur(8px); /* تأثير ضبابي أقوى */
+      transition: opacity 0.3s ease;
+      opacity: 0;
+      pointer-events: none; /* لتجنب حجب التفاعل عندما لا يكون مرئيًا */
+    }
+
+    .loading-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .spinner {
+      border: 6px solid rgba(255, 255, 255, 0.3);
+      border-top: 6px solid white;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* رسائل الإشعارات */
+    .notification {
+      position: fixed;
+      top: 30px; /* أعلى قليلاً */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--success-color);
+      color: white;
+      padding: 18px 35px; /* بادينغ أكبر */
+      border-radius: 12px;
+      box-shadow: 0 8px 20px var(--shadow-medium);
+      z-index: 10000;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out, top 0.5s ease;
+      min-width: 350px;
+      text-align: center;
+      font-weight: bold;
+      pointer-events: none; /* لتجنب حجب التفاعل عندما لا يكون مرئيًا */
+    }
+
+    .notification.show {
+      opacity: 1;
+      top: 50px; /* تظهر من أعلى بشكل أجمل */
+      pointer-events: auto;
+    }
+    .notification.error {
+      background-color: var(--error-color);
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+        color: black;
+        display: block;
+        margin: 0;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .container {
+        box-shadow: none;
+        padding: 0;
+        margin: 0;
+      }
+      #preview {
+        border: none;
+        padding: 0;
+        margin-top: 0;
+        box-shadow: none;
+        min-height: auto;
+      }
+      h1, h2 {
+        color: black;
+        text-align: center;
+        border-bottom: none;
+        padding-bottom: 0;
+        margin-bottom: 10px;
+      }
+      #preview h2 {
+        border-bottom: 2px solid #ccc; /* إبقاء الخط تحت عناوين المعاينة */
+        text-align: right;
+        font-size: 20px;
+      }
+      #preview p {
+        font-size: 16px;
+        line-height: 1.8;
+        text-align: justify;
+      }
+      #preview p.question-text {
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>منصّة إعداد امتحانات اللغة العربيّة</h1>
+  <div class="container">
+    <h1>منصّة إعداد امتحانات اللغة العربيّة</h1>
 
-  <label>النصّ (حدّ أقصى 300 كلمة):</label>
-  <textarea id="mainText" rows="6" maxlength="3000" placeholder="ألصق النص هنا..."></textarea>
+    <label for="mainText">النصّ:</label>
+    <textarea id="mainText" rows="12" placeholder="ألصق النصّ هنا..."></textarea>
+    <div class="word-count">الكلمات: <span id="wordCount">0</span> / 300</div>
 
-  <div id="questions"></div>
+    <div id="questions"></div>
 
-  <div class="actions no-print">
-    <button onclick="addQuestion()">➕ أضف سؤالًا</button>
-    <button onclick="generatePreview()">📄 معاينة الامتحان</button>
-    <button onclick="exportToPDF()">⬇️ تحميل PDF</button>
-  </div>
+    <button id="addQuestionBtn" class="no-print" onclick="addQuestion()">➕ أضف سؤالًا</button>
+    <div class="actions no-print">
+      <button onclick="generatePreview()">📄 معاينة الامتحان</button>
+      <button onclick="exportDocument('pdf')">⬇️ تحميل PDF</button>
+      <button onclick="exportDocument('word')">⬇️ تحميل Word</button>
+    </div>
+  </div>
 
-  <div id="preview"></div>
+  <div id="preview" class="container"></div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <script>
-    const questions = [];
+    <div id="loadingOverlay" class="loading-overlay">
+    <div class="spinner"></div>
+    <div id="loadingMessage">جاري التحميل...</div>
+  </div>
 
-    function addQuestion() {
-      const container = document.createElement('div');
-      container.className = 'question';
+    <div id="notification" class="notification"></div>
 
-      const qText = document.createElement('textarea');
-      qText.placeholder = 'اكتب السؤال هنا...';
-      qText.rows = 2;
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    const questions = [];
+    const mainTextarea = document.getElementById('mainText');
+    const wordCountSpan = document.getElementById('wordCount');
+    const questionsContainer = document.getElementById('questions');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    const loadingMessage = document.getElementById('loadingMessage');
+    const notificationElement = document.getElementById('notification');
 
-      const type = document.createElement('select');
-      ['مغلق (إجابة دقيقة)', 'مفتوح (تحليلي)', 'ذو طابع رأي شخصي'].forEach(t => {
-        const opt = document.createElement('option');
-        opt.value = t;
-        opt.textContent = t;
-        type.appendChild(opt);
-      });
+    const MAX_WORDS = 300;
 
-      container.appendChild(document.createTextNode('السؤال:'));
-      container.appendChild(qText);
-      container.appendChild(document.createElement('br'));
-      container.appendChild(document.createTextNode('نوع السؤال:'));
-      container.appendChild(type);
+    // تحديث عدّاد الكلمات عند كلّ إدخال
+    mainTextarea.addEventListener('input', updateWordCount);
 
-      document.getElementById('questions').appendChild(container);
-      questions.push({ element: container, text: qText, type });
-    }
+    function updateWordCount() {
+      const text = mainTextarea.value.trim();
+      const words = text.split(/\s+/).filter(word => word.length > 0);
+      const currentWordCount = words.length;
 
-    function generatePreview() {
-      const mainText = document.getElementById('mainText').value.trim();
-      const words = mainText.split(/\s+/);
-      const limitedText = words.slice(0, 300).join(' ');
+      wordCountSpan.textContent = currentWordCount;
 
-      let html = `<h2>النصّ:</h2><p style="font-size:16px;">${limitedText}</p><h2>الأسئلة:</h2>`;
-      questions.forEach((q, i) => {
-        html += `<p style="font-size:15px;"><strong>السؤال ${i + 1} (${q.type.value}):</strong> ${q.text.value}</p>`;
-      });
+      if (currentWordCount > MAX_WORDS) {
+        // منع المستخدم من الكتابة بعد تجاوز الحدّ الأقصى
+        mainTextarea.value = words.slice(0, MAX_WORDS).join(' ');
+        wordCountSpan.textContent = MAX_WORDS;
+        showNotification('تمّ تجاوز الحدّ الأقصى للكلمات (300 كلمة).', 'error');
+      }
+    }
 
-      document.getElementById('preview').innerHTML = html;
-    }
+    function addQuestion() {
+      const container = document.createElement('div');
+      container.className = 'question-container';
 
-    function exportToPDF() {
-      generatePreview();
-      const element = document.getElementById('preview');
-      html2pdf().from(element).set({
-        margin: 10,
-        filename: 'امتحان-اللغة-العربية.pdf',
-        html2canvas: { scale: 2 },
-        jsPDF: {
-          orientation: 'portrait',
-          unit: 'mm',
-          format: 'a4',
-          // تأكد من أن الخط المستخدم يدعم العربية لتجنب الرموز الغريبة:
-          font: 'Simplified Arabic'
-        }
-      }).save();
-    }
-  </script>
+      const qLabel = document.createElement('label');
+      qLabel.textContent = 'السؤال:';
+      const qText = document.createElement('textarea');
+      qText.placeholder = 'اكتب السؤال هنا...';
+      qText.rows = 3; /* حجم مناسب لخانة السؤال */
+
+      const optionsDiv = document.createElement('div');
+      optionsDiv.className = 'question-options';
+
+      const typeDiv = document.createElement('div');
+      const typeLabel = document.createElement('label');
+      typeLabel.textContent = 'نوع السؤال:';
+      const typeSelect = document.createElement('select');
+      ['مغلق (إجابة دقيقة)', 'مفتوح (تحليلي)', 'ذو طابع رأي شخصي'].forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        typeSelect.appendChild(opt);
+      });
+      typeDiv.appendChild(typeLabel);
+      typeDiv.appendChild(typeSelect);
+
+      const gradeDiv = document.createElement('div');
+      const gradeLabel = document.createElement('label');
+      gradeLabel.textContent = 'الدرجة:';
+      const gradeSelect = document.createElement('select');
+      [1, 2, 3, 4, 5].forEach(g => { // أضفت درجات إضافية
+        const opt = document.createElement('option');
+        opt.value = g;
+        opt.textContent = g;
+        gradeSelect.appendChild(opt);
+      });
+      gradeDiv.appendChild(gradeLabel);
+      gradeDiv.appendChild(gradeSelect);
+
+      optionsDiv.appendChild(typeDiv);
+      optionsDiv.appendChild(gradeDiv);
+
+      // زرّ الحذف لكلّ سؤال
+      const deleteBtn = document.createElement('button');
+      deleteBtn.className = 'delete-question-btn no-print';
+      deleteBtn.innerHTML = '&times;';
+      deleteBtn.title = 'حذف السؤال';
+      deleteBtn.onclick = () => deleteQuestion(container);
+
+      container.appendChild(deleteBtn);
+      container.appendChild(qLabel);
+      container.appendChild(qText);
+      container.appendChild(optionsDiv);
+
+      questionsContainer.appendChild(container);
+
+      questions.push({ element: container, text: qText, type: typeSelect, grade: gradeSelect });
+      showNotification('تمّ إضافة سؤال جديد!', 'success');
+    }
+
+    function deleteQuestion(questionElement) {
+      const index = questions.findIndex(q => q.element === questionElement);
+      if (index > -1) {
+        questions.splice(index, 1);
+        questionElement.remove();
+        showNotification('تمّ حذف السؤال بنجاح.', 'success');
+      }
+    }
+
+    function generatePreview() {
+      const mainText = mainTextarea.value.trim();
+      const words = mainText.split(/\s+/).filter(word => word.length > 0);
+      const limitedText = words.slice(0, MAX_WORDS).join(' ');
+
+      if (!limitedText && questions.filter(q => q.text.value.trim()).length === 0) {
+        document.getElementById('preview').innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 50px;">الرجاء إضافة نصّ أو أسئلة للمعاينة.</p>';
+        showNotification('لا يوجد محتوى للمعاينة. الرجاء إضافة نصّ أو أسئلة.', 'error');
+        return;
+      }
+
+      let html = '';
+      if (limitedText) {
+        html += `<h2 style="font-family:'Amiri', serif; font-weight: 700;">النصّ:</h2><p style="font-size:16px; font-family:'Amiri', serif; text-align: justify;">${limitedText}</p>`;
+      }
+
+      if (questions.length > 0) {
+        html += `<h2 style="font-family:'Amiri', serif; font-weight: 700;">الأسئلة:</h2>`;
+        let questionNumber = 0;
+        questions.forEach((q) => {
+          if (q.text.value.trim()) {
+            questionNumber++;
+            html += `<p class="question-text" style="font-size:14px; font-family:'Amiri', serif; margin-bottom: 15px;"><strong>${questionNumber}. (${q.grade.value} درجات):</strong> ${q.text.value}</p>`;
+          }
+        });
+        if (questionNumber === 0 && !limitedText) {
+          html = '<p style="text-align: center; color: var(--text-muted); padding: 50px;">الرجاء إضافة نصّ أو أسئلة للمعاينة.</p>';
+          showNotification('لا يوجد محتوى للمعاينة. الرجاء إضافة نصّ أو أسئلة.', 'error');
+        } else if (questionNumber === 0 && limitedText) {
+          showNotification('تمّ تحديث المعاينة. لم تتمّ إضافة أيّ أسئلة صالحة.', 'info');
+        }
+      }
+
+      document.getElementById('preview').innerHTML = html;
+      if (limitedText || questions.filter(q => q.text.value.trim()).length > 0) {
+        showNotification('تمّ تحديث المعاينة بنجاح!', 'success');
+      }
+    }
+
+    async function exportDocument(type) {
+      generatePreview();
+
+      const previewElement = document.getElementById('preview');
+      if (!previewElement.innerHTML || previewElement.innerHTML.includes('الرجاء إضافة نصّ')) {
+        showNotification('لا يوجد محتوى لتصديره. الرجاء إضافة نصّ أو أسئلة.', 'error');
+        return;
+      }
+
+      showLoading(`جاري تحميل ${type === 'pdf' ? 'ملفّ PDF' : 'ملفّ Word'}...`);
+
+      try {
+        if (type === 'pdf') {
+          const opt = {
+            margin: 10,
+            filename: 'امتحان-اللغة-العربية.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, letterRendering: true, useCORS: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+          };
+          await html2pdf().set(opt).from(previewElement).save();
+          showNotification('تمّ تحميل ملفّ PDF بنجاح!');
+        } else if (type === 'word') {
+          const header = `
+            <html xmlns:o='urn:schemas-microsoft-com:office:office'
+                  xmlns:w='urn:schemas-microsoft-com:office:word'
+                  xmlns='http://www.w3.org/TR/REC-html40'>
+            <head>
+              <meta charset="utf-8">
+              <title>امتحان اللغة العربية</title>
+              <style>
+                body { font-family: 'Simplified Arabic', 'Amiri', serif; direction: rtl; text-align: right; margin: 20px; }
+                h1 { text-align: center; font-size: 28px; font-weight: bold; margin-bottom: 20px; border-bottom: 2px solid #3498db; padding-bottom: 10px; }
+                h2 { text-align: right; font-size: 22px; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+                p { margin-bottom: 10px; line-height: 1.8; text-align: justify; font-size: 16px; }
+                p.question-text { font-size: 14px; line-height: 1.6; }
+                strong { font-weight: bold; }
+              </style>
+            </head><body>`;
+          const footer = "</body></html>";
+          const content = previewElement.innerHTML;
+          const sourceHTML = header + content + footer;
+
+          const blob = new Blob(['\ufeff', sourceHTML], {type: 'application/msword;charset=utf-8'});
+          const url = URL.createObjectURL(blob);
+
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'امتحان-اللغة-العربية.doc';
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(() => {
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+          }, 100);
+          showNotification('تمّ تحميل ملفّ Word بنجاح!');
+        }
+      } catch (error) {
+        console.error('فشل التصدير:', error);
+        showNotification('حدث خطأ أثناء التصدير. حاول مرّة أخرى.', 'error');
+      } finally {
+        hideLoading();
+      }
+    }
+
+    function showLoading(message) {
+      loadingMessage.textContent = message;
+      loadingOverlay.classList.add('show');
+    }
+
+    function hideLoading() {
+      loadingOverlay.classList.remove('show');
+    }
+
+    function showNotification(message, type = 'success') {
+      notificationElement.textContent = message;
+      notificationElement.className = `notification show ${type}`;
+      setTimeout(() => {
+        notificationElement.className = `notification`;
+      }, 3000);
+    }
+
+    // التأكد من تشغيل عدّاد الكلمات عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', updateWordCount);
+  </script>
 </body>
 </html>
