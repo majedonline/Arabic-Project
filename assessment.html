@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نموذج تقييم ذكي لمسابقات اللغة العربية</title>
+  <style>
+    body { font-family: 'Tahoma', sans-serif; padding: 20px; background: #f3f3f3; }
+    label { display: block; margin-top: 15px; font-weight: bold; }
+    textarea, select, button { width: 100%; padding: 10px; font-size: 16px; margin-top: 5px; }
+    .result { margin-top: 20px; background: #fff; padding: 15px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+  <h1>نموذج تقييم ذكي لمسابقات اللغة العربية</h1>
+
+  <label for="question">السؤال:</label>
+  <textarea id="question" rows="3" placeholder="أدخل السؤال هنا..."></textarea>
+
+  <label for="questionType">نوع السؤال:</label>
+  <select id="questionType">
+    <option value="closed">معلومة دقيقة (مغلق)</option>
+    <option value="interpretive">إجابة تفسيريّة (تحليل)</option>
+    <option value="open">إجابة مفتوحة (إبداع)</option>
+    <option value="opinion">رأي مدعوم (جدلي)</option>
+  </select>
+
+  <label for="answer">إجابة الطالب:</label>
+  <textarea id="answer" rows="5" placeholder="أدخل إجابة الطالب هنا..."></textarea>
+
+  <button onclick="evaluateAnswer()">قيّم الإجابة</button>
+
+  <div id="result" class="result"></div>
+
+  <script>
+    function evaluateAnswer() {
+      const question = document.getElementById('question').value.trim();
+      const answer = document.getElementById('answer').value.trim();
+      const type = document.getElementById('questionType').value;
+      let result = "";
+
+      if (!question || !answer) {
+        document.getElementById('result').innerHTML = '<span style="color:red">يرجى إدخال السؤال والإجابة معًا.</span>';
+        return;
+      }
+
+      switch(type) {
+        case 'closed':
+          result = answer.length < 10 ? "❌ إجابة غير مكتملة أو قصيرة جدًا." : "✅ إجابة تبدو دقيقة. تأكد من مطابقتها للنموذج.";
+          break;
+        case 'interpretive':
+          result = answer.includes('لأن') || answer.includes('حيث') ? "✅ تحتوي على تحليل أو تفسير." : "⚠️ راجع عمق التحليل المطلوب.";
+          break;
+        case 'open':
+          result = answer.length > 100 ? "✅ إجابة مفتوحة جيدة وطويلة." : "⚠️ الإبداع اللغوي يحتاج إلى توسّع أكثر.";
+          break;
+        case 'opinion':
+          result = (answer.includes('أعتقد') || answer.includes('في رأيي')) && answer.includes('لأن')
+            ? "✅ رأي واضح مدعوم بالحجج."
+            : "⚠️ يُفضل تضمين رأي صريح وأسباب داعمة.";
+          break;
+        default:
+          result = "❓ نوع السؤال غير محدد.";
+      }
+
+      document.getElementById('result').innerHTML = `<strong>النتيجة:</strong><br>${result}`;
+    }
+  </script>
+</body>
+</html>
