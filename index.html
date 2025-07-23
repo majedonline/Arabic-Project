@@ -10,6 +10,8 @@
       padding: 20px;
       background: #f3f3f3;
       transition: all 0.3s ease-in-out;
+      max-width: 794px;
+      margin: auto;
     }
     label {
       display: block;
@@ -36,8 +38,20 @@
     .options {
       margin-top: 20px;
     }
-    .hidden {
-      display: none;
+    #wordCount {
+      font-size: 14px;
+      color: #666;
+      margin-top: 5px;
+    }
+    .export-btn {
+      margin-top: 30px;
+      background-color: #007BFF;
+      color: white;
+      font-size: 18px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -45,7 +59,8 @@
   <h1>نموذج تقييم ذكي لمسابقات اللغة العربية</h1>
 
   <label for="mainText">النصّ الأساسي:</label>
-  <textarea id="mainText" rows="6" placeholder="ألصق هنا النصّ الذي يدور حوله الامتحان..."></textarea>
+  <textarea id="mainText" rows="6" placeholder="ألصق هنا النصّ الذي يدور حوله الامتحان..." oninput="checkWordCount()"></textarea>
+  <div id="wordCount">عدد الكلمات: 0 / 300</div>
 
   <div id="questionContainer"></div>
 
@@ -79,6 +94,8 @@
       <option value="Amiri">Amiri (تقليدي)</option>
     </select>
   </div>
+
+  <button class="export-btn" onclick="exportToWord()">📄 تصدير إلى Word</button>
 
   <script>
     let questionIndex = 1;
@@ -125,12 +142,52 @@
       document.body.style.fontFamily = font;
 
       if (paperSize === 'A4') {
-        document.body.style.maxWidth = '794px'; // A4 width at 96dpi
+        document.body.style.maxWidth = '794px';
       } else if (paperSize === 'A5') {
-        document.body.style.maxWidth = '559px'; // A5 width at 96dpi
+        document.body.style.maxWidth = '559px';
       } else {
         document.body.style.maxWidth = '100%';
       }
+    }
+
+    function checkWordCount() {
+      const textarea = document.getElementById('mainText');
+      const words = textarea.value.trim().split(/\s+/);
+      const count = textarea.value.trim() ? words.length : 0;
+      const wordCountDisplay = document.getElementById('wordCount');
+      wordCountDisplay.textContent = `عدد الكلمات: ${count} / 300`;
+
+      if (count > 300) {
+        textarea.value = words.slice(0, 300).join(" ");
+        wordCountDisplay.textContent = "عدد الكلمات: 300 / 300 (تم بلوغ الحد الأقصى)";
+      }
+    }
+
+    function exportToWord() {
+      const mainText = document.getElementById('mainText').value;
+      const questions = document.getElementById('questionContainer').innerHTML;
+
+      const header = `<h1 style="text-align:right; font-family:Tahoma">نموذج تقييم ذكي لمسابقات اللغة العربية</h1>`;
+      const bodyContent = `
+        <div style="direction:rtl; font-family:Tahoma">
+          <h2>النصّ الأساسي:</h2>
+          <p>${mainText.replace(/\n/g, '<br>')}</p>
+          <h2>الأسئلة:</h2>
+          ${questions}
+        </div>
+      `;
+
+      const blob = new Blob(['\ufeff' + header + bodyContent], {
+        type: 'application/msword'
+      });
+
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'نموذج_التقييم.doc';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
   </script>
 </body>
