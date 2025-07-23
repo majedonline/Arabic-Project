@@ -8,217 +8,223 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap" rel="stylesheet" />
 
-
   <style>
-    /* الألوان الأساسيّة والتصميم الحديث */
+    /* الألوان الأساسيّة والتصميم الأنيق */
     :root {
-      --primary-color: #2c3e50; /* أزرق داكن جدًّا للعناوين والنصوص الرئيسية */
-      --secondary-color: #3498db; /* أزرق فاتح للأزرار المميزة والحدود */
-      --accent-color: #2ecc71; /* أخضر زاهي لزر الإضافة */
-      --background-color: #ecf0f1; /* خلفية فاتحة جدًّا */
-      --card-background: #ffffff; /* خلفية البطاقات بيضاء */
-      --text-color: #34495e; /* نصّ رماديّ داكن */
-      --border-color: #bdc3c7; /* لون حدود رماديّ فاتح */
-      --hover-color: #2980b9; /* لون التمرير للأزرار الزرقاء */
-      --add-hover-color: #27ae60; /* لون التمرير لزر الإضافة */
-      --success-color: #28a745; /* لون النجاح */
-      --error-color: #dc3545; /* لون الخطأ */
-      --shadow-light: rgba(0, 0, 0, 0.08);
+      --primary-dark: #2c3e50; /* للعناوين والنصوص الرئيسية */
+      --secondary-blue: #3498db; /* للأزرار والخطوط المميزة */
+      --accent-green: #2ecc71; /* لزر الإضافة */
+      --background-light: #ecf0f1; /* خلفية فاتحة */
+      --card-background: #ffffff; /* خلفية البطاقات */
+      --text-muted: #7f8c8d; /* للنصوص الثانوية وعداد الكلمات */
+      --border-color: #dbe4e6; /* لون خفيف للحدود */
+      --hover-dark-blue: #2980b9; /* زر التمرير */
+      --add-hover-dark-green: #27ae60; /* زر الإضافة عند التمرير */
+      --success-color: #28a745;
+      --error-color: #dc3545;
+      --shadow-soft: rgba(0, 0, 0, 0.08);
       --shadow-medium: rgba(0, 0, 0, 0.15);
     }
 
+    /* إعادة تعيين أساسيّة */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      font-family: 'Cairo', 'Amiri', 'Simplified Arabic', serif, sans-serif; /* تفضيل Cairo ثم Amiri ثم Simplified Arabic */
-      background: var(--background-color);
-      padding: 30px;
-      color: var(--text-color);
+      font-family: 'Cairo', sans-serif, 'Amiri', serif, 'Simplified Arabic'; /* Cairo هو الخطّ الأوّل الآن */
+      background: var(--background-light);
+      color: var(--primary-dark);
       line-height: 1.8;
       direction: rtl;
       text-align: right;
-      margin: 0;
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh; /* لتوسيط المحتوى عموديًّا */
+      padding: 40px 20px; /* بادينغ شامل للجسم */
+      min-height: 100vh;
     }
 
     .container {
-      max-width: 960px; /* زيادة العرض الأقصى للمحتوى */
+      max-width: 1000px; /* زيادة العرض الأقصى ليعطي مساحة أكبر */
       width: 100%;
       background: var(--card-background);
-      padding: 40px; /* زيادة البادينغ */
-      border-radius: 15px; /* حواف أكثر دائرية */
-      box-shadow: 0 10px 30px var(--shadow-medium); /* ظلّ أوضح */
-      margin-bottom: 30px;
+      padding: 50px; /* زيادة البادينغ داخل الحاويات */
+      border-radius: 20px; /* حواف أكثر دائرية للجاذبية */
+      box-shadow: 0 12px 40px var(--shadow-medium); /* ظلّ أكثر بروزًا */
+      margin-bottom: 40px; /* مسافة أكبر بين الحاويات */
     }
 
     h1 {
       text-align: center;
-      font-size: 38px; /* حجم أكبر للعنوان الرئيسي */
-      margin-bottom: 35px;
-      color: var(--primary-color);
+      font-size: 42px; /* حجم أكبر للعنوان الرئيسي */
+      margin-bottom: 40px;
+      color: var(--primary-dark);
       font-weight: 700;
-      border-bottom: 4px solid var(--secondary-color); /* خطّ سميك تحت العنوان */
-      padding-bottom: 18px;
-      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.05);
+      border-bottom: 5px solid var(--secondary-blue); /* خطّ سميك ومميز */
+      padding-bottom: 20px;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.08);
     }
 
     label {
       display: block;
-      margin-bottom: 12px;
+      margin-bottom: 15px; /* مسافة أكبر تحت التسميات */
       font-weight: bold;
-      color: var(--primary-color);
-      font-size: 18px; /* حجم أكبر للتسميات */
+      color: var(--primary-dark);
+      font-size: 19px; /* حجم أكبر لتسميات الحقول */
     }
 
     textarea, select {
       width: 100%;
-      padding: 15px 18px; /* زيادة البادينغ داخل حقول الإدخال */
-      font-size: 16px;
-      font-family: 'Cairo', 'Amiri', 'Simplified Arabic', serif, sans-serif;
+      padding: 18px 20px; /* زيادة البادينغ داخل حقول الإدخال */
+      font-size: 16px; /* خطّ النصّ في الإدخال */
+      font-family: 'Cairo', sans-serif, 'Amiri', serif, 'Simplified Arabic';
       border: 1px solid var(--border-color);
-      border-radius: 10px; /* حواف أكثر دائرية */
-      margin-bottom: 18px;
+      border-radius: 12px; /* حواف أكثر دائرية للحقول */
+      margin-bottom: 20px; /* مسافة تحت الحقول */
       box-sizing: border-box;
       background-color: #fcfdff;
-      color: var(--text-color);
+      color: var(--primary-dark);
       transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
     textarea:focus, select:focus {
-      border-color: var(--secondary-color);
-      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); /* ظلّ خفيف عند التركيز */
+      border-color: var(--secondary-blue);
+      box-shadow: 0 0 0 4px rgba(52, 152, 219, 0.25); /* ظلّ التركيز أوضح */
       outline: none;
     }
 
     textarea#mainText {
-      min-height: 250px; /* زيادة حجم مربع النص الرئيسي بشكل كبير */
+      min-height: 300px; /* زيادة حجم مربع النصّ الرئيسيّ بشكل كبير جدًّا */
       resize: vertical;
     }
 
     .word-count {
       text-align: left;
-      font-size: 15px;
-      color: #7f8c8d;
-      margin-top: -10px;
-      margin-bottom: 25px;
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-top: -15px; /* تقريب لعداد الكلمات */
+      margin-bottom: 30px;
       direction: ltr;
+      font-weight: 500;
     }
 
     .question-container {
       border: 1px solid var(--border-color);
-      padding: 25px; /* زيادة البادينغ */
-      margin-bottom: 25px;
+      padding: 30px; /* زيادة البادينغ داخل مربعات الأسئلة */
+      margin-bottom: 30px;
       background: var(--card-background);
-      border-radius: 12px;
-      box-shadow: 0 5px 20px var(--shadow-light);
+      border-radius: 15px;
+      box-shadow: 0 6px 25px var(--shadow-soft);
       position: relative;
     }
 
     .question-container label {
       font-weight: normal;
-      color: var(--primary-color);
+      color: var(--primary-dark);
       font-size: 17px;
     }
 
     .question-container textarea {
       font-size: 15px;
-      margin-bottom: 12px;
-      min-height: 80px; /* ارتفاع أدنى لخانة السؤال */
+      margin-bottom: 15px;
+      min-height: 90px; /* ارتفاع أدنى لخانة السؤال */
     }
 
     .question-options {
       display: flex;
-      gap: 25px;
-      margin-top: 15px;
+      gap: 30px; /* مسافة أكبر بين خيارات السؤال */
+      margin-top: 20px;
       align-items: center;
-      flex-wrap: wrap; /* للسماح بالعناصر بالنزول لسطر جديد */
+      flex-wrap: wrap;
     }
 
     .question-options > div {
       flex: 1;
-      min-width: 180px; /* ضمان عرض أدنى للخانات */
+      min-width: 200px; /* عرض أدنى لخيارات الدرجة والنوع */
     }
 
     .question-options select {
       width: auto;
       min-width: 100%;
       margin-bottom: 0;
-      padding-right: 35px; /* مسافة لأيقونة السهم */
-      appearance: none; /* إخفاء سهم المتصفح الافتراضي */
-      background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232c3e50%22%20d%3D%22M287%2C197.3L159.1%2C69.5c-3-3-7.6-3-10.6%2C0L5.3%2C197.3c-3%2C3-3%2C7.6%2C0%2C10.6l21.2%2C21.2c3%2C3%2C7.6%2C3%2C10.6%2C0l114.4-114.4c3-3%2C7.6-3%2C10.6%2C0l114.4%2C114.4c3%2C3%2C7.6%2C3%2C10.6%2C0l21.2-21.2C290%2C204.9%2C290%2C200.3%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E') no-repeat right 12px center / 14px;
+      padding-right: 40px; /* مسافة لأيقونة السهم */
+      appearance: none;
+      background: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%232c3e50%22%20d%3D%22M287%2C197.3L159.1%2C69.5c-3-3-7.6-3-10.6%2C0L5.3%2C197.3c-3%2C3-3%2C7.6%2C0%2C10.6l21.2%2C21.2c3%2C3%2C7.6%2C3%2C10.6%2C0l114.4-114.4c3-3%2C7.6-3%2C10.6%2C0l114.4%2C114.4c3%2C3%2C7.6%2C3%2C10.6%2C0l21.2-21.2C290%2C204.9%2C290%2C200.3%2C287%2C197.3z%22%2F%3E%3C%2Fsvg%3E') no-repeat right 15px center / 16px;
       cursor: pointer;
     }
 
     button {
-      padding: 14px 30px; /* حجم أكبر للأزرار */
-      background: var(--secondary-color);
+      padding: 15px 35px; /* حجم أكبر للأزرار */
+      background: var(--secondary-blue);
       color: white;
       border: none;
-      border-radius: 10px; /* حواف أكثر دائرية */
+      border-radius: 12px; /* حواف أكثر دائرية للأزرار */
       cursor: pointer;
-      font-size: 18px; /* حجم خطّ أكبر للأزرار */
+      font-size: 19px; /* حجم خطّ أكبر للأزرار */
       font-weight: bold;
-      transition: background 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
-      margin-left: 15px;
-      box-shadow: 0 5px 15px var(--shadow-light);
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      margin-left: 20px; /* مسافة بين الأزرار */
+      box-shadow: 0 6px 20px var(--shadow-soft);
     }
 
     button:hover {
-      background: var(--hover-color);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px var(--shadow-medium);
+      background: var(--hover-dark-blue);
+      transform: translateY(-4px); /* رفع الزرّ قليلاً عند التمرير */
+      box-shadow: 0 10px 25px var(--shadow-medium);
     }
 
     button:active {
       transform: translateY(0);
-      box-shadow: 0 2px 5px var(--shadow-light);
+      box-shadow: 0 4px 10px var(--shadow-soft);
     }
 
     #addQuestionBtn {
-      background: var(--accent-color);
-      margin-top: 25px;
-      margin-bottom: 25px;
+      background: var(--accent-green);
+      margin-top: 30px;
+      margin-bottom: 30px;
     }
 
     #addQuestionBtn:hover {
-      background: var(--add-hover-color);
+      background: var(--add-hover-dark-green);
     }
 
     .actions {
-      margin-top: 30px;
+      margin-top: 40px; /* مسافة أكبر فوق أزرار الإجراءات */
       display: flex;
       justify-content: flex-start;
       flex-wrap: wrap;
-      gap: 15px; /* مسافة أكبر بين الأزرار */
+      gap: 20px; /* مسافة أكبر بين أزرار الإجراءات */
     }
 
     #preview {
       background: var(--card-background);
-      padding: 40px;
-      margin-top: 35px;
+      padding: 50px;
+      margin-top: 40px;
       border: 1px solid var(--border-color);
-      border-radius: 15px;
+      border-radius: 20px;
       font-family: 'Amiri', serif; /* استخدام Amiri للمعاينه لثبات التنسيق */
       font-size: 16px;
-      min-height: 300px; /* ارتفاع أدنى أكبر للمعاينه */
-      box-shadow: 0 10px 30px var(--shadow-medium);
+      min-height: 350px; /* ارتفاع أدنى أكبر للمعاينه */
+      box-shadow: 0 12px 40px var(--shadow-medium);
     }
 
     #preview h2 {
       text-align: right;
-      font-size: 28px; /* حجم أكبر لعناوين المعاينة */
-      color: var(--primary-color);
-      margin-bottom: 20px;
-      border-bottom: 3px solid var(--secondary-color);
-      padding-bottom: 10px;
+      font-size: 32px; /* حجم أكبر لعناوين المعاينة */
+      color: var(--primary-dark);
+      margin-bottom: 25px;
+      border-bottom: 4px solid var(--secondary-blue);
+      padding-bottom: 12px;
       display: inline-block;
       font-weight: 700;
     }
 
     #preview p {
-      margin-bottom: 18px; /* مسافة أكبر بين الفقرات */
-      line-height: 2.2; /* تباعد أسطر أكبر */
+      margin-bottom: 20px;
+      line-height: 2.3; /* تباعد أسطر أكبر */
       text-align: justify;
       font-size: 16px; /* خط النص الرئيسي */
       font-family: 'Amiri', serif;
@@ -226,8 +232,9 @@
 
     #preview p.question-text {
       font-size: 14px; /* خط الأسئلة */
-      line-height: 2;
+      line-height: 2.1;
       font-family: 'Amiri', serif;
+      margin-bottom: 18px;
     }
 
     .delete-question-btn {
@@ -235,24 +242,24 @@
       border: none;
       color: var(--error-color);
       cursor: pointer;
-      font-size: 26px; /* حجم أكبر لزر الحذف */
+      font-size: 28px; /* حجم أكبر لزر الحذف */
       position: absolute;
-      top: 15px;
-      left: 15px;
-      padding: 5px;
-      transition: color 0.3s ease, transform 0.2s ease;
+      top: 18px;
+      left: 18px;
+      padding: 8px;
+      transition: color 0.3s ease, transform 0.2s ease, background-color 0.3s ease;
       border-radius: 50%;
-      width: 35px;
-      height: 35px;
+      width: 40px; /* لجعل الزرّ دائريًّا ومرئيًّا */
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .delete-question-btn:hover {
-      color: #b30000;
-      background-color: rgba(220, 53, 69, 0.1); /* خلفية خفيفة عند التمرير */
-      transform: scale(1.1);
+      color: #a00000;
+      background-color: rgba(220, 53, 69, 0.15);
+      transform: scale(1.15);
     }
 
     /* مؤشر التحميل */
@@ -262,49 +269,54 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(44, 62, 80, 0.9); /* لون داكن أكثر */
+      background: rgba(44, 62, 80, 0.95);
       display: flex;
       justify-content: center;
       align-items: center;
       z-index: 9999;
       color: white;
-      font-size: 24px;
+      font-size: 26px;
       flex-direction: column;
-      gap: 25px;
-      backdrop-filter: blur(8px); /* تأثير ضبابي أقوى */
+      gap: 30px;
+      backdrop-filter: blur(10px);
     }
 
     .spinner {
-      border: 6px solid rgba(255, 255, 255, 0.3);
-      border-top: 6px solid white;
+      border: 7px solid rgba(255, 255, 255, 0.3);
+      border-top: 7px solid white;
       border-radius: 50%;
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     /* رسائل الإشعارات */
     .notification {
       position: fixed;
-      top: 30px; /* أعلى قليلاً */
+      top: 50px;
       left: 50%;
       transform: translateX(-50%);
       background-color: var(--success-color);
       color: white;
-      padding: 18px 35px; /* بادينغ أكبر */
-      border-radius: 12px;
-      box-shadow: 0 8px 20px var(--shadow-medium);
+      padding: 20px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px var(--shadow-medium);
       z-index: 10000;
       opacity: 0;
-      transition: opacity 0.5s ease-in-out, top 0.5s ease;
-      min-width: 350px;
+      transition: opacity 0.6s ease-in-out, top 0.6s ease;
+      min-width: 400px;
       text-align: center;
       font-weight: bold;
     }
 
     .notification.show {
       opacity: 1;
-      top: 50px; /* تظهر من أعلى بشكل أجمل */
+      top: 70px; /* تظهر من أعلى بشكل أجمل */
     }
     .notification.error {
       background-color: var(--error-color);
@@ -341,7 +353,7 @@
         margin-bottom: 10px;
       }
       #preview h2 {
-        border-bottom: 2px solid #ccc; /* إبقاء الخط تحت عناوين المعاينة */
+        border-bottom: 2px solid #ccc;
         text-align: right;
         font-size: 20px;
       }
@@ -361,7 +373,7 @@
     <h1>منصّة إعداد امتحانات اللغة العربيّة</h1>
 
     <label for="mainText">النصّ:</label>
-    <textarea id="mainText" rows="12" placeholder="ألصق النصّ هنا..."></textarea>
+    <textarea id="mainText" rows="15" placeholder="ألصق النصّ هنا..."></textarea>
     <div class="word-count">الكلمات: <span id="wordCount">0</span> / 300</div>
 
     <div id="questions"></div>
@@ -419,7 +431,7 @@
       qLabel.textContent = 'السؤال:';
       const qText = document.createElement('textarea');
       qText.placeholder = 'اكتب السؤال هنا...';
-      qText.rows = 3; /* زيادة حجم خانة السؤال */
+      qText.rows = 4; /* زيادة حجم خانة السؤال */
 
       const optionsDiv = document.createElement('div');
       optionsDiv.className = 'question-options';
@@ -484,7 +496,7 @@
       const limitedText = words.slice(0, MAX_WORDS).join(' ');
 
       if (!limitedText && questions.filter(q => q.text.value.trim()).length === 0) {
-        document.getElementById('preview').innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 50px;">الرجاء إضافة نصّ أو أسئلة للمعاينة.</p>';
+        document.getElementById('preview').innerHTML = '<p style="text-align: center; color: var(--text-muted); padding: 50px;">الرجاء إضافة نصّ أو أسئلة للمعاينة.</p>';
         showNotification('لا يوجد محتوى للمعاينة. الرجاء إضافة نصّ أو أسئلة.', 'error');
         return;
       }
@@ -504,7 +516,7 @@
           }
         });
         if (questionNumber === 0 && !limitedText) {
-          html = '<p style="text-align: center; color: #7f8c8d; padding: 50px;">الرجاء إضافة نصّ أو أسئلة للمعاينة.</p>';
+          html = '<p style="text-align: center; color: var(--text-muted); padding: 50px;">الرجاء إضافة نصّ أو أسئلة للمعاينة.</p>';
           showNotification('لا يوجد محتوى للمعاينة. الرجاء إضافة نصّ أو أسئلة.', 'error');
         } else if (questionNumber === 0 && limitedText) {
           showNotification('تمّ تحديث المعاينة. لم تتمّ إضافة أيّ أسئلة صالحة.', 'info');
