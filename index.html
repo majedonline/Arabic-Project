@@ -1,143 +1,154 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>منشئ الامتحانات العربيّة</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <title>منصّة إعداد امتحانات اللغة العربية</title>
   <style>
     body {
-      padding: 2rem;
-      background-color: #f8f9fa;
-      font-family: 'Cairo', sans-serif;
+      font-family: 'Simplified Arabic', 'Arial', sans-serif;
+      background: #f5f5f5;
+      padding: 30px;
+      color: #333;
+      line-height: 1.8;
     }
-    .question-block {
-      border: 1px solid #ced4da;
-      border-radius: 8px;
-      padding: 1rem;
-      margin-bottom: 1rem;
-      background-color: #fff;
+
+    h1 {
+      text-align: center;
+      font-size: 22px;
+      margin-bottom: 20px;
     }
-    .word-count {
-      font-size: 0.9rem;
-      color: #6c757d;
+
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      font-family: 'Simplified Arabic', 'Arial', sans-serif;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      border: 1px solid #ccc;
+      padding: 15px;
+      margin-bottom: 10px;
+      background: white;
+    }
+
+    .question select,
+    .question textarea {
+      width: 100%;
+      margin-top: 5px;
+      font-size: 14px;
+      font-family: 'Simplified Arabic', 'Arial', sans-serif;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 16px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    #preview {
+      background: white;
+      padding: 20px;
+      margin-top: 30px;
+      border: 1px solid #ccc;
+    }
+
+    .actions {
+      margin-top: 20px;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .no-print {
+        display: none;
+      }
+      #preview {
+        border: none;
+        padding: 0;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1 class="mb-4 text-center">🔶 منشئ الامتحانات العربيّة 🔶</h1>
+  <h1>منصّة إعداد امتحانات اللغة العربيّة</h1>
 
-    <!-- نص الامتحان -->
-    <div class="mb-4">
-      <label for="examText" class="form-label">نصّ الامتحان (حد أقصى 300 كلمة)</label>
-      <textarea class="form-control" id="examText" rows="5" maxlength="2500"></textarea>
-      <div class="word-count" id="wordCount">عدد الكلمات: 0 / 300</div>
-    </div>
+  <label>النصّ (حدّ أقصى 300 كلمة):</label>
+  <textarea id="mainText" rows="6" maxlength="3000" placeholder="ألصق النص هنا..."></textarea>
 
-    <!-- إضافة سؤال -->
-    <div class="mb-3">
-      <label for="questionText" class="form-label">السؤال</label>
-      <input type="text" class="form-control" id="questionText">
-    </div>
-    <div class="mb-3">
-      <label for="questionType" class="form-label">نوع السؤال</label>
-      <select class="form-select" id="questionType">
-        <option value="معلومة دقيقة">معلومة دقيقة</option>
-        <option value="إجابة نسبيّة">إجابة نسبيّة</option>
-        <option value="إجابة مفتوحة">إجابة مفتوحة</option>
-        <option value="رأي وتبرير">رأي وتبرير</option>
-        <option value="إبداع أدبي">إبداع أدبي</option>
-        <option value="تحليل لغوي">تحليل لغوي</option>
-        <option value="بلاغة">بلاغة</option>
-        <option value="مهارات قرن 21">مهارات قرن 21</option>
-      </select>
-    </div>
-    <button class="btn btn-primary mb-4" onclick="addQuestion()">➕ إضافة السؤال</button>
+  <div id="questions"></div>
 
-    <!-- قائمة الأسئلة -->
-    <div id="questionList"></div>
-
-    <!-- خيارات التصدير -->
-    <hr>
-    <h5 class="mb-3">📄 خيارات التصدير</h5>
-    <button class="btn btn-success" onclick="exportToWord()">💾 تصدير إلى Word</button>
-    <button class="btn btn-outline-secondary" onclick="exportToPDF()">🖨️ تصدير إلى PDF</button>
-
+  <button class="no-print" onclick="addQuestion()">➕ أضف سؤالًا</button>
+  <div class="actions no-print">
+    <button onclick="generatePreview()">📄 معاينة الامتحان</button>
+    <button onclick="exportToPDF()">⬇️ تحميل PDF</button>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script>
-    const wordCountEl = document.getElementById('wordCount');
-    const examText = document.getElementById('examText');
-    examText.addEventListener('input', () => {
-      const words = examText.value.trim().split(/\s+/);
-      const count = examText.value.trim() ? words.length : 0;
-      wordCountEl.textContent = `عدد الكلمات: ${count} / 300`;
-      if (count > 300) examText.value = words.slice(0, 300).join(' ');
-    });
+  <div id="preview"></div>
 
-    const questionList = document.getElementById('questionList');
-    const allQuestions = [];
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    const questions = [];
 
     function addQuestion() {
-      const text = document.getElementById('questionText').value.trim();
-      const type = document.getElementById('questionType').value;
-      if (!text) return alert('الرجاء إدخال نص السؤال.');
-      const question = { text, type };
-      allQuestions.push(question);
-      renderQuestions();
-      document.getElementById('questionText').value = '';
-    }
+      const container = document.createElement('div');
+      container.className = 'question';
 
-    function renderQuestions() {
-      questionList.innerHTML = '';
-      allQuestions.forEach((q, i) => {
-        const block = document.createElement('div');
-        block.className = 'question-block';
-        block.innerHTML = `
-          <strong>س${i + 1})</strong> ${q.text} <br><em class="text-muted">نوع السؤال: ${q.type}</em>
-          <button class="btn btn-sm btn-danger float-end" onclick="deleteQuestion(${i})">حذف</button>
-        `;
-        questionList.appendChild(block);
+      const qText = document.createElement('textarea');
+      qText.placeholder = 'اكتب السؤال هنا...';
+      qText.rows = 2;
+
+      const type = document.createElement('select');
+      ['مغلق (إجابة دقيقة)', 'مفتوح (تحليلي)', 'ذو طابع رأي شخصي'].forEach(t => {
+        const opt = document.createElement('option');
+        opt.value = t;
+        opt.textContent = t;
+        type.appendChild(opt);
       });
+
+      container.appendChild(document.createTextNode('السؤال:'));
+      container.appendChild(qText);
+      container.appendChild(document.createElement('br'));
+      container.appendChild(document.createTextNode('نوع السؤال:'));
+      container.appendChild(type);
+
+      document.getElementById('questions').appendChild(container);
+
+      questions.push({ element: container, text: qText, type });
     }
 
-    function deleteQuestion(index) {
-      allQuestions.splice(index, 1);
-      renderQuestions();
-    }
+    function generatePreview() {
+      const mainText = document.getElementById('mainText').value.trim();
+      const words = mainText.split(/\s+/);
+      const limitedText = words.slice(0, 300).join(' ');
 
-    function exportToWord() {
-      let content = `نص الامتحان:\n${examText.value}\n\nالأسئلة:\n`;
-      allQuestions.forEach((q, i) => {
-        content += `س${i + 1}) ${q.text} (نوع: ${q.type})\n`;
+      let html = `<h2>النصّ:</h2><p style="font-size:16px;">${limitedText}</p><h2>الأسئلة:</h2>`;
+      questions.forEach((q, i) => {
+        html += `<p style="font-size:14px;"><strong>السؤال ${i + 1} (${q.type.value}):</strong> ${q.text.value}</p>`;
       });
-      const blob = new Blob([content], { type: 'application/msword' });
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = 'امتحان.doc';
-      link.click();
+
+      document.getElementById('preview').innerHTML = html;
     }
 
     function exportToPDF() {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      let y = 10;
-      doc.setFont('Arial');
-      doc.text("نص الامتحان:", 10, y);
-      y += 10;
-      const examLines = doc.splitTextToSize(examText.value, 180);
-      doc.text(examLines, 10, y);
-      y += examLines.length * 10;
-      doc.text("الأسئلة:", 10, y);
-      y += 10;
-      allQuestions.forEach((q, i) => {
-        const qLines = doc.splitTextToSize(`س${i + 1}) ${q.text} (نوع: ${q.type})`, 180);
-        doc.text(qLines, 10, y);
-        y += qLines.length * 10;
-      });
-      doc.save('امتحان.pdf');
+      generatePreview();
+      const element = document.getElementById('preview');
+      html2pdf().from(element).set({
+        margin: 10,
+        filename: 'امتحان-اللغة-العربية.pdf',
+        html2canvas: { scale: 2 },
+        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+      }).save();
     }
   </script>
 </body>
