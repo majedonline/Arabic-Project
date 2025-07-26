@@ -202,7 +202,7 @@ button:disabled {
 }
 
 .document-content {
-    /* Styles for the generated document */
+    /* Styles for the generated document - crucial for PDF/Word export */
     font-family: 'Simplified Arabic', serif; /* Use Simplified Arabic for document content */
     font-size: 14pt;
     color: #000;
@@ -211,6 +211,7 @@ button:disabled {
     box-sizing: border-box;
     min-height: 29.7cm; /* A4 height */
     max-width: 21cm; /* A4 width */
+    overflow: hidden; /* Ensure content stays within bounds */
 }
 
 .document-content h2 {
@@ -241,6 +242,16 @@ button:disabled {
 .document-content .contest-details span {
     font-weight: bold;
 }
+/* Specific alignment for details within the grid for RTL */
+.document-content .contest-details div span:first-child {
+    text-align: right;
+    flex-basis: 40%; /* Allocate space for label */
+}
+.document-content .contest-details div span:last-child {
+    text-align: left; /* Value aligns left within its column */
+    flex-basis: 55%; /* Allocate space for value */
+}
+
 
 .document-content .text-section {
     margin-bottom: 30pt;
@@ -387,4 +398,8 @@ ol.decimal-padded li:before {
     margin-left: 0.5em; /* Space between number and text */
 }
 
-/* Adjust for Arabic numbering for PDF/Word if possible, otherwise rely on default */
+/* Specific styles for PDF export via html2pdf.js */
+.exporting-pdf .document-content {
+    /* Adjustments for PDF generation if needed */
+    /* For instance, if fonts aren't rendering, try adding font-weight: normal; */
+}
