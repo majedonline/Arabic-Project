@@ -13,14 +13,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const textInput = document.getElementById('textInput');
     const authorSourceInput = document.getElementById('authorSourceInput');
     const vocabularyInput = document.getElementById('vocabularyInput');
-    const dateInput = document.getElementById('dateInput');
+    const dateInput = document = document.getElementById('dateInput');
     const schoolNameInput = document.getElementById('schoolNameInput');
     const teacherNameInput = document.getElementById('teacherNameInput');
     const subjectInput = document.getElementById('subjectInput');
     const durationInput = document.getElementById('durationInput');
     const scoreInput = document.getElementById('scoreInput');
-    const questionGroupsContainer = document.getElementById('questionGroupsContainer'); // Changed
-    const addQuestionGroupBtn = document.getElementById('addQuestionGroupBtn'); // New
+    const questionGroupsContainer = document.getElementById('questionGroupsContainer');
+    const addQuestionGroupBtn = document.getElementById('addQuestionGroupBtn');
 
     // Save/Load Contest
     const saveContestBtn = document.getElementById('saveContestBtn');
@@ -63,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
             questionGroupsData.push({ title: groupTitle, questions: questionsInGroup });
         });
 
-
         const contestData = {
             title: titleInput.value,
             text: textInput.value,
@@ -75,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
             subject: subjectInput.value,
             duration: durationInput.value,
             score: scoreInput.value,
-            questionGroups: questionGroupsData // Storing groups
+            questionGroups: questionGroupsData
         };
 
         try {
@@ -112,8 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const contestData = JSON.parse(localStorage.getItem(selectedKey));
             if (contestData) {
-                // Populate input fields
-                contestNameInput.value = selectedKey.substring('contest_'.length); // Set contest name field
+                contestNameInput.value = selectedKey.substring('contest_'.length);
                 titleInput.value = contestData.title || '';
                 textInput.value = contestData.text || '';
                 authorSourceInput.value = contestData.authorSource || '';
@@ -125,11 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 durationInput.value = contestData.duration || '';
                 scoreInput.value = contestData.score || '';
 
-                // Clear existing question groups
+                // Clear existing question groups and reset counter
                 questionGroupsContainer.innerHTML = '';
                 totalQuestionCounter = 0;
 
-                // Add saved question groups and their questions
                 if (contestData.questionGroups && Array.isArray(contestData.questionGroups)) {
                     contestData.questionGroups.forEach(group => {
                         const newGroupWrapper = addQuestionGroup(group.title);
@@ -142,7 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 // If no groups loaded, add a default empty group
                 if (questionGroupsContainer.children.length === 0) {
-                    addQuestionGroup();
+                    addQuestionGroup(); // Add an initial empty group if none were loaded
                 }
                 alert(`تم استعادة المسابقة "${selectedKey.substring('contest_'.length)}"`);
             }
@@ -179,6 +176,7 @@ document.addEventListener('DOMContentLoaded', () => {
         removeGroupBtn.addEventListener('click', () => {
             if (confirm('هل أنت متأكد أنك تريد حذف هذا القسم بكل أسئلته؟')) {
                 groupWrapper.remove();
+                // Re-render preview or re-number questions if needed (optional for now)
             }
         });
 
@@ -194,25 +192,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Question Management ---
     const addQuestionToGroup = (targetContainer, qText = '', qType = 'text', qScore = '', qOptions = []) => {
-        totalQuestionCounter++; // Increment overall question counter
+        totalQuestionCounter++; // Increment overall question counter for unique IDs
+        const currentQuestionNumber = totalQuestionCounter; // Use current counter for display
         const questionBlock = document.createElement('div');
         questionBlock.className = 'question-block';
-        questionBlock.dataset.questionId = totalQuestionCounter;
+        questionBlock.dataset.questionId = currentQuestionNumber;
 
         questionBlock.innerHTML = `
             <div class="form-group">
-                <label for="questionText_${totalQuestionCounter}">السؤال ${totalQuestionCounter}:</label>
-                <textarea id="questionText_${totalQuestionCounter}" name="questionText" rows="3" placeholder="أدخل نص السؤال هنا">${qText}</textarea>
+                <label for="questionText_${currentQuestionNumber}">السؤال ${currentQuestionNumber}:</label>
+                <textarea id="questionText_${currentQuestionNumber}" name="questionText" rows="3" placeholder="أدخل نص السؤال هنا">${qText}</textarea>
             </div>
             <div class="form-group">
-                <label for="questionType_${totalQuestionCounter}">نوع السؤال:</label>
-                <select id="questionType_${totalQuestionCounter}" name="questionType" class="question-type-select">
+                <label for="questionType_${currentQuestionNumber}">نوع السؤال:</label>
+                <select id="questionType_${currentQuestionNumber}" name="questionType" class="question-type-select">
                     <option value="text" ${qType === 'text' ? 'selected' : ''}>نصي</option>
                     <option value="multiple-choice" ${qType === 'multiple-choice' ? 'selected' : ''}>اختيار من متعدد</option>
                     <option value="true-false" ${qType === 'true-false' ? 'selected' : ''}>صح/خطأ</option>
                 </select>
-                <label for="questionScore_${totalQuestionCounter}" style="display:inline-block; width:auto; margin-right: 5px;">الدرجة:</label>
-                <input type="number" id="questionScore_${totalQuestionCounter}" name="questionScore" value="${qScore}" style="width: 80px; display:inline-block;">
+                <label for="questionScore_${currentQuestionNumber}" style="display:inline-block; width:auto; margin-right: 5px;">الدرجة:</label>
+                <input type="number" id="questionScore_${currentQuestionNumber}" name="questionScore" value="${qScore}" style="width: 80px; display:inline-block;">
                 <button type="button" class="remove-question-btn">حذف السؤال</button>
             </div>
             <div class="options-container" style="${qType === 'multiple-choice' ? '' : 'display:none;'}">
@@ -253,7 +252,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         addOptionButton.addEventListener('click', () => addOption(optionsList));
-        removeQuestionButton.addEventListener('click', () => questionBlock.remove());
+        removeQuestionButton.addEventListener('click', () => {
+            questionBlock.remove();
+            // Re-number questions after one is removed (optional, but good for consistency)
+            updateQuestionNumbers();
+        });
 
         targetContainer.appendChild(questionBlock);
     };
@@ -268,6 +271,21 @@ document.addEventListener('DOMContentLoaded', () => {
         optionGroup.querySelector('.remove-option-btn').addEventListener('click', () => optionGroup.remove());
         optionsList.appendChild(optionGroup);
     };
+
+    // Function to re-number questions after removal
+    const updateQuestionNumbers = () => {
+        let currentNumber = 1;
+        document.querySelectorAll('.question-block').forEach(questionBlock => {
+            questionBlock.querySelector('label[for^="questionText_"]').textContent = `السؤال ${currentNumber}:`;
+            // Update IDs if necessary, though dataset.questionId is more robust for internal logic
+            // questionBlock.querySelector('textarea[name="questionText"]').id = `questionText_${currentNumber}`;
+            // questionBlock.querySelector('select[name="questionType"]').id = `questionType_${currentNumber}`;
+            // questionBlock.querySelector('input[name="questionScore"]').id = `questionScore_${currentNumber}`;
+            currentNumber++;
+        });
+        totalQuestionCounter = currentNumber - 1; // Reset total counter to reflect actual count
+    };
+
 
     // --- Preview Functionality ---
     previewBtn.addEventListener('click', () => {
@@ -427,15 +445,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2, logging: true, dpi: 192, letterRendering: true, useCORS: true },
                 jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' },
-                // Use css: true to process media queries for print styles
                 pagebreak: { mode: ['css', 'avoid-all', 'legacy'] }
             };
 
             html2pdf().set(opt).from(element).save().finally(() => {
-                // Remove the temporary class after PDF generation is complete
                 document.body.classList.remove('exporting-pdf');
             });
-        }, 500);
+        }, 500); // Increased delay
     });
 
     exportWordBtn.addEventListener('click', () => {
@@ -459,7 +475,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     .document-content {
                         font-size: 14pt;
                         color: #000;
-                        /* Use standard Word margins if padding is an issue */
                         margin: 1in; /* Equivalent to 2.54cm from all sides */
                         box-sizing: border-box;
                     }
@@ -476,18 +491,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         font-size: 12pt;
                     }
                     .document-content .contest-details div {
-                        display: flex; /* Use flex for layout */
+                        display: flex;
                         justify-content: space-between;
                         padding: 2pt 0;
-                        margin-bottom: 5pt; /* Add spacing between lines */
+                        margin-bottom: 5pt;
                     }
                     .document-content .contest-details span:first-child {
                         font-weight: bold;
-                        flex-basis: 40%; /* Adjust width for label */
+                        flex-basis: 40%;
                     }
                      .document-content .contest-details span:last-child {
-                        flex-basis: 55%; /* Adjust width for value */
-                        text-align: left; /* Value aligns left for RTL */
+                        flex-basis: 55%;
+                        text-align: left;
                     }
 
 
@@ -498,10 +513,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     .document-content .text-section ol {
                         list-style-type: decimal;
-                        padding-right: 20pt; /* Indent for numbering */
+                        padding-right: 20pt;
                         margin-right: 0;
                         margin-left: 0;
-                        list-style-position: inside; /* Numbers inside the line flow */
+                        list-style-position: inside;
                     }
                     .document-content .text-section ol li {
                         margin-bottom: 10pt;
@@ -538,7 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     .document-content .questions-main-section {
                         margin-top: 30pt;
-                        page-break-before: always; /* Start questions on a new page */
+                        page-break-before: always;
                     }
                     .document-content .questions-main-section > h3 {
                         font-size: 18pt;
@@ -547,7 +562,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     .document-content .question-group-in-doc {
                         margin-bottom: 30pt;
-                        page-break-inside: avoid; /* Keep group together if possible */
+                        page-break-inside: avoid;
                     }
                     .document-content .question-group-in-doc > h4 {
                         font-size: 16pt;
@@ -559,7 +574,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .document-content .question {
                         margin-bottom: 20pt;
                         font-size: 14pt;
-                        page-break-inside: avoid; /* Keep individual questions together */
+                        page-break-inside: avoid;
                     }
                     .document-content .question-text {
                         font-weight: bold;
@@ -575,12 +590,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         margin-bottom: 5pt;
                         text-align: right;
                     }
-                    p { margin: 0 0 1em; } /* Default paragraph spacing */
-                    ol, ul { margin: 0 0 1em; padding: 0 0 0 40px; } /* Default list spacing/padding */
+                    p { margin: 0 0 1em; }
+                    ol, ul { margin: 0 0 1em; padding: 0 0 0 40px; }
                     li { margin-bottom: 0.5em; }
-                    /* Correct RTL list padding for Word */
                     .document-content ol, .document-content ul {
-                        margin-right: 20pt; /* Indent from right for Arabic lists */
+                        margin-right: 20pt;
                         padding-right: 0;
                         margin-left: 0;
                         padding-left: 0;
@@ -605,6 +619,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initial setup: Add a default question group with one question
-    const defaultGroup = addQuestionGroup();
-    addQuestionToGroup(defaultGroup.querySelector('.questions-in-group-container'));
+    // This is run only once on initial page load
+    if (questionGroupsContainer.children.length === 0) {
+        const defaultGroup = addQuestionGroup();
+        addQuestionToGroup(defaultGroup.querySelector('.questions-in-group-container'));
+    }
 });
