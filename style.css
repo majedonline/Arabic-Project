@@ -1,0 +1,339 @@
+body {
+    font-family: 'Scheherazade New', serif;
+    background-color: #f4f4f4;
+    direction: rtl;
+    text-align: right;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #555;
+    font-size: 1.1em;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+textarea,
+select {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    box-sizing: border-box; /* Ensures padding doesn't add to total width */
+    font-family: 'Simplified Arabic', serif; /* Or 'Scheherazade New' */
+}
+
+textarea {
+    resize: vertical;
+    min-height: 80px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+/* Contest Info Grid */
+.contest-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.contest-info-grid label {
+    font-weight: normal;
+    margin-bottom: 5px;
+    font-size: 1em;
+}
+
+.contest-info-grid input {
+    margin-bottom: 0;
+}
+
+/* Question Styling */
+.question-block {
+    background-color: #f9f9f9;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.question-block .form-group {
+    border-bottom: none;
+    padding-bottom: 0;
+    margin-bottom: 10px;
+}
+
+.question-block .form-group label {
+    font-size: 0.95em;
+    font-weight: bold;
+}
+
+.question-type-select {
+    width: auto;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.option-input-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.option-input-group input[type="text"] {
+    flex-grow: 1;
+    margin-bottom: 0;
+}
+
+.add-option-btn, .remove-option-btn, .remove-question-btn {
+    background-color: #28a745;
+    margin-right: 5px;
+    padding: 6px 10px;
+    font-size: 0.9em;
+    margin-top: 0;
+}
+
+.remove-option-btn, .remove-question-btn {
+    background-color: #dc3545;
+}
+
+.add-option-btn:hover { background-color: #218838; }
+.remove-option-btn:hover, .remove-question-btn:hover { background-color: #c82333; }
+
+
+/* Preview Section */
+.hidden {
+    display: none;
+}
+
+#previewContent {
+    background-color: #fff;
+    padding: 30px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    min-height: 500px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+    line-height: 1.8;
+}
+
+.document-content {
+    /* Styles for the generated document */
+    font-family: 'Simplified Arabic', serif; /* Use Simplified Arabic for document content */
+    font-size: 14pt;
+    color: #000;
+    margin: 0 auto; /* Centering for better preview */
+    padding: 2cm; /* Standard A4 margins */
+    box-sizing: border-box;
+    min-height: 29.7cm; /* A4 height */
+    max-width: 21cm; /* A4 width */
+}
+
+.document-content h2 {
+    text-align: center;
+    font-size: 24pt;
+    margin-bottom: 20pt;
+    line-height: 1.2;
+}
+
+.document-content .contest-details {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10pt;
+    margin-bottom: 30pt;
+    padding: 10pt;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 12pt;
+    font-family: 'Simplified Arabic', serif;
+}
+
+.document-content .contest-details div {
+    display: flex;
+    justify-content: space-between;
+    padding: 2pt 0;
+}
+
+.document-content .contest-details span {
+    font-weight: bold;
+}
+
+.document-content .text-section {
+    margin-bottom: 30pt;
+    font-size: 14pt;
+    line-height: 1.8;
+}
+
+.document-content .text-section ol {
+    list-style: decimal inside; /* Numbers inside the line */
+    padding: 0;
+    margin: 0;
+}
+
+.document-content .text-section ol li {
+    margin-bottom: 10pt;
+    font-size: 14pt;
+    text-align: justify;
+    padding-right: 0; /* Remove default padding for rtl list */
+}
+
+.document-content .author-source {
+    text-align: left; /* Aligned to left for RTL */
+    font-size: 12pt;
+    margin-top: 20pt;
+    font-style: italic;
+    font-family: 'Simplified Arabic', serif;
+}
+
+.document-content .vocabulary-section {
+    margin-top: 30pt;
+    padding-top: 15pt;
+    border-top: 1px dashed #ccc;
+    font-size: 10pt;
+    font-family: 'Simplified Arabic', serif;
+}
+
+.document-content .vocabulary-section h3 {
+    font-size: 14pt;
+    margin-bottom: 10pt;
+    text-align: right;
+}
+
+.document-content .vocabulary-section ol {
+    list-style: decimal inside;
+    padding: 0;
+    margin: 0;
+}
+
+.document-content .vocabulary-section ol li {
+    margin-bottom: 5pt;
+    text-align: right;
+}
+
+.document-content .questions-section {
+    margin-top: 30pt;
+    page-break-before: always; /* Start questions on a new page */
+}
+
+.document-content .questions-section h3 {
+    font-size: 18pt;
+    margin-bottom: 20pt;
+    text-align: center;
+}
+
+.document-content .question {
+    margin-bottom: 20pt;
+    font-size: 14pt;
+    page-break-inside: avoid; /* Keep questions together if possible */
+}
+
+.document-content .question-text {
+    font-weight: bold;
+    margin-bottom: 10pt;
+}
+
+.document-content .options {
+    list-style: none;
+    padding: 0;
+    margin-top: 5pt;
+}
+
+.document-content .options li {
+    margin-bottom: 5pt;
+}
+
+.preview-actions {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.preview-actions button {
+    margin: 0 10px;
+}
+
+/* Specific styling for Word export compatibility */
+.document-content p {
+    margin-bottom: 1em; /* Standard paragraph spacing for Word */
+}
+/* Ensure consistent padding/margin for lists in Word */
+.document-content ol, .document-content ul {
+    margin-right: 1.5em; /* Adjust for RTL lists */
+    margin-left: 0;
+    padding-right: 0;
+    padding-left: 0;
+}
+.document-content li {
+    margin-bottom: 0.5em;
+}
+
+/* Simplified Arabic font definition for Word/PDF compatibility */
+@font-face {
+    font-family: 'Simplified Arabic';
+    src: url('path/to/simplified-arabic.ttf') format('truetype'); /* You might need to self-host this font or ensure system availability */
+    /* Fallback if font isn't available on system */
+}
+
+/* Ensure two-character numbers for numbering lists */
+ol.decimal-padded {
+    list-style: none;
+    counter-reset: item;
+}
+ol.decimal-padded li:before {
+    counter-increment: item;
+    content: counters(item, ".") ". "; /* Example: "1. " or "1.1. " for sub-lists */
+    /* Or simply: content: counter(item) ". "; for single level */
+    display: inline-block;
+    width: 2em; /* Adjust as needed for alignment */
+    text-align: left;
+    direction: ltr; /* Ensure numbering is LTR */
+    margin-left: 0.5em; /* Space between number and text */
+}
+
+/* Adjust for Arabic numbering for PDF/Word if possible, otherwise rely on default */
