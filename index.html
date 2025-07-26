@@ -14,81 +14,81 @@
         <h1>إنشاء مسابقة جديدة</h1>
 
         <div class="form-group">
-            <label for="contestName">اسم المسابقة (للحفظ والاستعادة):</label>
-            <input type="text" id="contestName" placeholder="مثال: مسابقة اللغة العربية للصف السادس">
-            <button id="saveContestBtn">حفظ المسابقة</button>
+            <label for="contestName">اسْمُ المسابقةِ (للحفظِ والاستعادةِ):</label>
+            <input type="text" id="contestName" placeholder="مثال: مسابقةُ اللغةِ العربيةِ للصفِ السادسِ">
+            <button id="saveContestBtn">حفظُ المسابقةِ</button>
             <select id="loadContestSelect">
-                <option value="">استعادة مسابقة محفوظة</option>
+                <option value="">استعادةُ مسابقةٍ محفوظةٍ</option>
             </select>
-            <button id="loadContestBtn" disabled>استعادة</button>
+            <button id="loadContestBtn" disabled>استعادةٌ</button>
         </div>
 
         <div class="form-group contest-info-grid">
             <div>
-                <label for="schoolNameInput">اسم المدرسة:</label>
+                <label for="schoolNameInput">اسْمُ المدرسةِ:</label>
                 <input type="text" id="schoolNameInput">
             </div>
             <div>
-                <label for="teacherNameInput">اسم المعلم:</label>
+                <label for="teacherNameInput">اسْمُ المعلِّمِ:</label>
                 <input type="text" id="teacherNameInput">
             </div>
             <div>
-                <label for="subjectInput">المادة:</label>
+                <label for="subjectInput">المادةُ:</label>
                 <input type="text" id="subjectInput">
             </div>
             <div>
-                <label for="dateInput">التاريخ:</label>
+                <label for="dateInput">التاريخُ:</label>
                 <input type="date" id="dateInput">
             </div>
             <div>
-                <label for="durationInput">المدة:</label>
-                <input type="text" id="durationInput" placeholder="مثال: ساعة واحدة">
+                <label for="durationInput">المدةُ:</label>
+                <input type="text" id="durationInput" placeholder="مثال: ساعةٌ واحدةٌ">
             </div>
             <div>
-                <label for="scoreInput">العلامة الكلية:</label>
+                <label for="scoreInput">العلامةُ الكليةُ:</label>
                 <input type="number" id="scoreInput" placeholder="مثال: 50">
             </div>
         </div>
 
         <div class="form-group">
-            <label for="titleInput">عنوان المسابقة:</label>
-            <input type="text" id="titleInput" placeholder="مثال: مسابقة فهم المقروء">
+            <label for="titleInput">عنوانُ المسابقةِ:</label>
+            <input type="text" id="titleInput" placeholder="مثال: مسابقةُ فهمِ المقروءِ">
         </div>
 
         <div class="form-group">
-            <label for="textInput">نص المسابقة (إذا كان هناك نص للمقروء):</label>
-            <textarea id="textInput" placeholder="أدخل هنا نص المسابقة"></textarea>
+            <label for="textInput">نصُّ المسابقةِ (إذا كان هناك نصٌّ للمقروءِ):</label>
+            <textarea id="textInput" placeholder="أدخلْ هنا نصَّ المسابقةِ"></textarea>
         </div>
 
         <div class="form-group">
-            <label for="authorSourceInput">المصدر/المؤلف (اختياري):</label>
-            <input type="text" id="authorSourceInput" placeholder="مثال: من كتاب القراءة للصف الخامس">
+            <label for="authorSourceInput">المصدرُ/المؤلِّفُ (اختياريٌّ):</label>
+            <input type="text" id="authorSourceInput" placeholder="مثال: مِنْ كتابِ القراءةِ للصفِّ الخامسِ">
         </div>
 
         <div class="form-group">
-            <label for="vocabularyInput">شرح المفردات/حواشي (اختياري، كل مفردة في سطر منفصل: كلمة: شرحها):</label>
+            <label for="vocabularyInput">شرحُ المفرداتِ/الحواشي (اختياريٌّ، كلُّ مفردةٍ في سطرٍ منفصلٍ: كلمةٌ: شرحُها):</label>
             <textarea id="vocabularyInput" rows="5" placeholder="مثال:
-ينهل: يشرب
-يعبر: يقطع"></textarea>
+ينهلُ: يشربُ
+يعبرُ: يقطعُ"></textarea>
         </div>
 
-        <h2>أقسام الأسئلة</h2>
+        <h2>أقسامُ الأسئلةِ</h2>
         <div id="questionGroupsContainer">
             </div>
-        <button id="addQuestionGroupBtn">إضافة قسم أسئلة جديد</button>
+        <button id="addQuestionGroupBtn">إضافةُ قسمِ أسئلةٍ جديدٍ</button>
 
         <hr>
-        <button id="previewBtn">معاينة وتصدير</button>
+        <button id="previewBtn">معاينةٌ وتصديرٌ</button>
     </div>
 
     <div id="preview-section" class="container hidden">
-        <h1>معاينة المسابقة</h1>
+        <h1>معاينةُ المسابقةِ</h1>
         <div id="previewContent">
             </div>
         <div class="preview-actions">
-            <button id="backToInputBtn">العودة للتعديل</button>
-            <button id="exportPdfBtn">تصدير إلى PDF</button>
-            <button id="exportWordBtn">تصدير إلى Word</button>
+            <button id="backToInputBtn">العودةُ للتعديلِ</button>
+            <button id="exportPdfBtn">تصديرٌ إلى PDF</button>
+            <button id="exportWordBtn">تصديرٌ إلى Word</button>
         </div>
     </div>
 
