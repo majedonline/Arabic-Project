@@ -1,679 +1,522 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Get main sections
+    // DOM Elements
     const inputSection = document.getElementById('input-section');
     const previewSection = document.getElementById('preview-section');
     const previewContent = document.getElementById('previewContent');
 
-    // Get buttons
     const previewBtn = document.getElementById('previewBtn');
     const backToInputBtn = document.getElementById('backToInputBtn');
     const exportPdfBtn = document.getElementById('exportPdfBtn');
     const exportWordBtn = document.getElementById('exportWordBtn');
 
-    // Get input fields
+    const addQuestionGroupBtn = document.getElementById('addQuestionGroupBtn');
+    const questionGroupsContainer = document.getElementById('questionGroupsContainer');
+
+    // Input fields
     const contestNameInput = document.getElementById('contestName');
+    const schoolNameInput = document.getElementById('schoolNameInput');
+    const teacherNameInput = document.getElementById('teacherNameInput');
+    const subjectInput = document.getElementById('subjectInput');
+    const dateInput = document.getElementById('dateInput');
+    const durationInput = document.getElementById('durationInput');
+    const scoreInput = document.getElementById('scoreInput');
     const titleInput = document.getElementById('titleInput');
     const textInput = document.getElementById('textInput');
     const authorSourceInput = document.getElementById('authorSourceInput');
     const vocabularyInput = document.getElementById('vocabularyInput');
-    const dateInput = document.getElementById('dateInput');
-    const schoolNameInput = document.getElementById('schoolNameInput');
-    const teacherNameInput = document.getElementById('teacherNameInput');
-    const subjectInput = document.getElementById('subjectInput');
-    const durationInput = document.getElementById('durationInput');
-    const scoreInput = document.getElementById('scoreInput');
-    const questionGroupsContainer = document.getElementById('questionGroupsContainer');
-    const addQuestionGroupBtn = document.getElementById('addQuestionGroupBtn');
 
-    // Save/Load Contest elements
+    // Save/Load Contest Elements
     const saveContestBtn = document.getElementById('saveContestBtn');
     const loadContestSelect = document.getElementById('loadContestSelect');
     const loadContestBtn = document.getElementById('loadContestBtn');
 
-    let totalQuestionCounter = 0; // To keep track of overall question numbering for display
+    let questionGroupCounter = 0; // To keep track of question group IDs
+    let questionCounter = 0; // To keep track of question IDs within groups
 
-    // --- Helper Functions ---
+    // --- Core Functions ---
 
-    // Formats date for display
-    const formatDate = (dateString) => {
-        if (!dateString) return '';
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('ar-EG', options);
-    };
-
-    // Updates question numbering on the UI
-    const updateQuestionNumbers = () => {
-        let currentNumber = 1;
-        document.querySelectorAll('.question-block').forEach(questionBlock => {
-            // Update the label text for the question
-            const questionLabel = questionBlock.querySelector('label[for^="questionText_"]');
-            if (questionLabel) {
-                questionLabel.textContent = `السؤال ${currentNumber}:`;
-            }
-
-            // Update IDs of the question elements to ensure uniqueness (important for labels and forms)
-            const questionTextarea = questionBlock.querySelector('textarea[name="questionText"]');
-            if (questionTextarea) questionTextarea.id = `questionText_${currentNumber}`;
-
-            const questionTypeSelect = questionBlock.querySelector('select[name="questionType"]');
-            if (questionTypeSelect) questionTypeSelect.id = `questionType_${currentNumber}`;
-
-            const questionScoreInput = questionBlock.querySelector('input[name="questionScore"]');
-            if (questionScoreInput) questionScoreInput.id = `questionScore_${currentNumber}`;
-
-            currentNumber++;
-        });
-        totalQuestionCounter = currentNumber - 1; // Keep totalQuestionCounter updated
-    };
-
-    // --- Question Management Functions ---
-
-    // Adds a new option input to a question's options list
-    const addOption = (optionsList, optionText = '') => {
-        const optionGroup = document.createElement('div');
-        optionGroup.className = 'option-input-group';
-        optionGroup.innerHTML = `
-            <input type="text" class="option-input" placeholder="أدخل الخيار هنا" value="${optionText}">
-            <button type="button" class="remove-option-btn">حذف</button>
-        `;
-        optionGroup.querySelector('.remove-option-btn').addEventListener('click', () => optionGroup.remove());
-        optionsList.appendChild(optionGroup);
-    };
-
-    // Adds a new question block to a specific question group container
-    const addQuestionToGroup = (targetContainer, qText = '', qType = 'text', qScore = '', qOptions = []) => {
-        const questionBlock = document.createElement('div');
-        questionBlock.className = 'question-block';
-
-        // Dynamic IDs are placeholder, updateQuestionNumbers will set final IDs
-        questionBlock.innerHTML = `
-            <div class="form-group">
-                <label for="questionText_PLACEHOLDER">السؤال :</label>
-                <textarea id="questionText_PLACEHOLDER" name="questionText" rows="3" placeholder="أدخل نص السؤال هنا">${qText}</textarea>
-            </div>
-            <div class="form-group">
-                <label for="questionType_PLACEHOLDER">نوع السؤال:</label>
-                <select id="questionType_PLACEHOLDER" name="questionType" class="question-type-select">
-                    <option value="text" ${qType === 'text' ? 'selected' : ''}>نصي</option>
-                    <option value="multiple-choice" ${qType === 'multiple-choice' ? 'selected' : ''}>اختيار من متعدد</option>
-                    <option value="true-false" ${qType === 'true-false' ? 'selected' : ''}>صح/خطأ</option>
-                </select>
-                <label for="questionScore_PLACEHOLDER" style="display:inline-block; width:auto; margin-right: 5px;">الدرجة:</label>
-                <input type="number" id="questionScore_PLACEHOLDER" name="questionScore" value="${qScore}" style="width: 80px; display:inline-block;">
-                <button type="button" class="remove-question-btn">حذف السؤال</button>
-            </div>
-            <div class="options-container" style="${qType === 'multiple-choice' ? '' : 'display:none;'}">
-                <label>الخيارات:</label>
-                <div class="options-list">
-                    </div>
-                <button type="button" class="add-option-btn">إضافة خيار</button>
-            </div>
-        `;
-
-        // Get elements within the new question block to attach event listeners
-        const typeSelect = questionBlock.querySelector(`select[name="questionType"]`);
-        const optionsContainer = questionBlock.querySelector('.options-container');
-        const optionsList = questionBlock.querySelector('.options-list');
-        const addOptionButton = questionBlock.querySelector('.add-option-btn');
-        const removeQuestionButton = questionBlock.querySelector('.remove-question-btn');
-
-        // Populate options if loading an existing multiple-choice question
-        if (qType === 'multiple-choice') {
-            if (qOptions.length > 0) {
-                qOptions.forEach(optionText => {
-                    addOption(optionsList, optionText);
-                });
-            } else { // For new multiple-choice questions or loaded ones without options
-                addOption(optionsList);
-                addOption(optionsList);
-            }
-        }
-
-        // Attach event listeners for the new question block
-        typeSelect.addEventListener('change', () => {
-            if (typeSelect.value === 'multiple-choice') {
-                optionsContainer.style.display = 'block';
-                if (optionsList.children.length === 0) { // Add default options if none exist
-                    addOption(optionsList);
-                    addOption(optionsList);
-                }
-            } else {
-                optionsContainer.style.display = 'none';
-            }
-        });
-
-        addOptionButton.addEventListener('click', () => addOption(optionsList));
-        removeQuestionButton.addEventListener('click', () => {
-            questionBlock.remove();
-            updateQuestionNumbers(); // Re-number after removal
-        });
-
-        targetContainer.appendChild(questionBlock);
-        updateQuestionNumbers(); // Update numbers immediately after adding
-    };
-
-    // Adds a new question group (section)
-    const addQuestionGroup = (groupTitle = '') => {
+    // Function to add a new question group
+    function addQuestionGroup(groupTitle = '') {
+        questionGroupCounter++;
+        const groupId = `group-${questionGroupCounter}`;
         const groupWrapper = document.createElement('div');
-        groupWrapper.className = 'question-group-wrapper';
+        groupWrapper.classList.add('question-group-wrapper');
+        groupWrapper.setAttribute('data-group-id', groupId); // Store group ID
+
         groupWrapper.innerHTML = `
             <div class="question-group-header">
                 <input type="text" class="group-title-input" placeholder="عنوان قسم الأسئلة (اختياري)" value="${groupTitle}">
-                <button type="button" class="remove-group-btn">حذف القسم</button>
+                <button type="button" class="remove-group-btn">حذفُ القسمِ</button>
             </div>
             <div class="questions-in-group-container">
                 </div>
-            <button type="button" class="add-question-to-group-btn">إضافة سؤال لهذا القسم</button>
+            <button type="button" class="add-question-to-group-btn">إضافةُ سؤالٍ لهذا القسمِ</button>
         `;
 
-        // Attach event listeners for the new group
-        const removeGroupBtn = groupWrapper.querySelector('.remove-group-btn');
-        removeGroupBtn.addEventListener('click', () => {
-            if (confirm('هل أنت متأكد أنك تريد حذف هذا القسم بكل أسئلته؟')) {
-                groupWrapper.remove();
-                updateQuestionNumbers(); // Re-number questions after a group is removed
-            }
-        });
-
-        const addQuestionToGroupBtn = groupWrapper.querySelector('.add-question-to-group-btn');
-        const questionsInGroupContainer = groupWrapper.querySelector('.questions-in-group-container');
-        addQuestionToGroupBtn.addEventListener('click', () => addQuestionToGroup(questionsInGroupContainer));
-
         questionGroupsContainer.appendChild(groupWrapper);
-        return groupWrapper; // Return the created group element
-    };
 
-    // --- Save/Load Functionality ---
-
-    const saveContest = () => {
-        const contestName = contestNameInput.value.trim();
-        if (!contestName) {
-            alert('الرجاء إدخال اسم للمسابقة لحفظها.');
-            return;
-        }
-
-        const questionGroupsData = [];
-        document.querySelectorAll('.question-group-wrapper').forEach(groupWrapper => {
-            const groupTitle = groupWrapper.querySelector('.group-title-input').value;
-            const questionsInGroup = [];
-            groupWrapper.querySelectorAll('.question-block').forEach(block => {
-                const questionText = block.querySelector('textarea[name="questionText"]').value;
-                const questionType = block.querySelector('select[name="questionType"]').value;
-                const questionScore = block.querySelector('input[name="questionScore"]').value;
-                const options = [];
-                if (questionType === 'multiple-choice') {
-                    block.querySelectorAll('.option-input').forEach(input => {
-                        options.push(input.value);
-                    });
-                }
-                questionsInGroup.push({ text: questionText, type: questionType, score: questionScore, options: options });
-            });
-            questionGroupsData.push({ title: groupTitle, questions: questionsInGroup });
+        // Add event listeners for new elements
+        groupWrapper.querySelector('.remove-group-btn').addEventListener('click', () => {
+            groupWrapper.remove();
+            updateQuestionNumbers();
+        });
+        groupWrapper.querySelector('.add-question-to-group-btn').addEventListener('click', () => {
+            addQuestionToGroup(groupWrapper.querySelector('.questions-in-group-container'));
+            updateQuestionNumbers();
         });
 
-        const contestData = {
-            title: titleInput.value,
-            text: textInput.value,
-            authorSource: authorSourceInput.value,
-            vocabulary: vocabularyInput.value,
-            date: dateInput.value,
-            schoolName: schoolNameInput.value,
-            teacherName: teacherNameInput.value,
-            subject: subjectInput.value,
-            duration: durationInput.value,
-            score: scoreInput.value,
-            questionGroups: questionGroupsData
-        };
+        // Add an initial question to the new group
+        addQuestionToGroup(groupWrapper.querySelector('.questions-in-group-container'));
+        updateQuestionNumbers();
+    }
 
-        try {
-            localStorage.setItem(`contest_${contestName}`, JSON.stringify(contestData));
-            alert(`تم حفظ المسابقة "${contestName}" بنجاح!`);
-            loadSavedContests(); // Refresh the select dropdown
-        } catch (e) {
-            console.error('Failed to save contest:', e);
-            alert('حدث خطأ أثناء حفظ المسابقة.');
-        }
-    };
+    // Function to add a question to a specific group
+    function addQuestionToGroup(container, questionData = {}) {
+        questionCounter++; // Increment global question counter
+        const questionId = `question-${questionCounter}`;
+        const questionBlock = document.createElement('div');
+        questionBlock.classList.add('question-block');
+        questionBlock.setAttribute('data-question-id', questionId); // Store question ID
 
-    const loadSavedContests = () => {
-        loadContestSelect.innerHTML = '<option value="">استعادة مسابقة محفوظة</option>';
-        let hasSavedContests = false;
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key.startsWith('contest_')) {
-                const name = key.substring('contest_'.length);
-                const option = document.createElement('option');
-                option.value = key;
-                option.textContent = name;
-                loadContestSelect.appendChild(option);
-                hasSavedContests = true;
-            }
-        }
-        loadContestBtn.disabled = !hasSavedContests;
-    };
+        const qText = questionData.text || '';
+        const qType = questionData.type || 'text';
+        const qScore = questionData.score || 1;
+        const qOptions = questionData.options || [];
 
-    const loadContest = () => {
-        const selectedKey = loadContestSelect.value;
-        if (!selectedKey) return;
-
-        try {
-            const contestData = JSON.parse(localStorage.getItem(selectedKey));
-            if (contestData) {
-                contestNameInput.value = selectedKey.substring('contest_'.length);
-                titleInput.value = contestData.title || '';
-                textInput.value = contestData.text || '';
-                authorSourceInput.value = contestData.authorSource || '';
-                vocabularyInput.value = contestData.vocabulary || '';
-                dateInput.value = contestData.date || '';
-                schoolNameInput.value = contestData.schoolName || '';
-                teacherNameInput.value = contestData.teacherName || '';
-                subjectInput.value = contestData.subject || '';
-                durationInput.value = contestData.duration || '';
-                scoreInput.value = contestData.score || '';
-
-                // Clear existing question groups and reset counter
-                questionGroupsContainer.innerHTML = '';
-                totalQuestionCounter = 0;
-
-                if (contestData.questionGroups && Array.isArray(contestData.questionGroups) && contestData.questionGroups.length > 0) {
-                    contestData.questionGroups.forEach(group => {
-                        const newGroupWrapper = addQuestionGroup(group.title);
-                        if (group.questions && Array.isArray(group.questions)) {
-                            group.questions.forEach(q => {
-                                addQuestionToGroup(newGroupWrapper.querySelector('.questions-in-group-container'), q.text, q.type, q.score, q.options);
-                            });
-                        }
-                    });
-                } else {
-                    // If no groups loaded or empty, add a default empty group and question
-                    const defaultGroup = addQuestionGroup();
-                    addQuestionToGroup(defaultGroup.querySelector('.questions-in-group-container'));
-                }
-                alert(`تم استعادة المسابقة "${selectedKey.substring('contest_'.length)}"`);
-            }
-        } catch (e) {
-            console.error('Failed to load contest:', e);
-            alert('حدث خطأ أثناء استعادة المسابقة.');
-        }
-    };
-
-    // --- Preview Generation ---
-    const generatePreview = () => {
-        let contentHtml = '';
-
-        // Contest Info
-        const date = formatDate(dateInput.value);
-        const schoolName = schoolNameInput.value;
-        const teacherName = teacherNameInput.value;
-        const subject = subjectInput.value;
-        const duration = durationInput.value;
-        const score = scoreInput.value;
-
-        if (date || schoolName || teacherName || subject || duration || score) {
-            contentHtml += `
-                <div class="contest-details">
-                    ${date ? `<div><span>التاريخ:</span><span>${date}</span></div>` : ''}
-                    ${schoolName ? `<div><span>اسم المدرسة:</span><span>${schoolName}</span></div>` : ''}
-                    ${teacherName ? `<div><span>اسم المعلم:</span><span>${teacherName}</span></div>` : ''}
-                    ${subject ? `<div><span>المادة:</span><span>${subject}</span></div>` : ''}
-                    ${duration ? `<div><span>المدة:</span><span>${duration}</span></div>` : ''}
-                    ${score ? `<div><span>العلامة:</span><span>${score}</span></div>` : ''}
-                </div>
-            `;
-        }
-
-        // Title
-        const title = titleInput.value.trim();
-        if (title) {
-            contentHtml += `<h2>${title}</h2>`;
-        }
-
-        // Text Section
-        const textContent = textInput.value.trim();
-        if (textContent) {
-            const paragraphs = textContent.split('\n').filter(p => p.trim() !== '');
-            if (paragraphs.length > 0) {
-                contentHtml += `<div class="text-section"><ol>`;
-                paragraphs.forEach(p => {
-                    contentHtml += `<li>${p.trim()}</li>`;
-                });
-                contentHtml += `</ol></div>`;
-            }
-        }
-
-        // Author and Source
-        const authorSource = authorSourceInput.value.trim();
-        if (authorSource) {
-            contentHtml += `<p class="author-source">${authorSource}</p>`;
-        }
-
-        // Vocabulary/Footnotes
-        const vocabularyContent = vocabularyInput.value.trim();
-        if (vocabularyContent) {
-            const vocabPairs = vocabularyContent.split('\n').filter(line => line.includes(':')).map(line => {
-                const parts = line.split(':');
-                return { term: parts[0].trim(), explanation: parts.slice(1).join(':').trim() };
-            });
-
-            if (vocabPairs.length > 0) {
-                contentHtml += `
-                    <div class="vocabulary-section">
-                        <h3>شرح المفردات:</h3>
-                        <ol>
-                            ${vocabPairs.map(v => `<li>${v.term}: ${v.explanation}</li>`).join('')}
-                        </ol>
+        questionBlock.innerHTML = `
+            <div class="form-group">
+                <label for="questionText_${questionId}">السؤال <span class="question-number"></span>:</label>
+                <textarea id="questionText_${questionId}" name="questionText" rows="3" placeholder="أدخلْ نصَّ السؤالِ هنا">${qText}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="questionType_${questionId}">نوعُ السؤالِ:</label>
+                <select id="questionType_${questionId}" name="questionType" class="question-type-select">
+                    <option value="text" ${qType === 'text' ? 'selected' : ''}>نصِّيٌّ</option>
+                    <option value="multiple-choice" ${qType === 'multiple-choice' ? 'selected' : ''}>اختيارٌ من متعدِّدٍ</option>
+                    <option value="true-false" ${qType === 'true-false' ? 'selected' : ''}>صحٌّ/خطأٌ</option>
+                </select>
+                <label for="questionScore_${questionId}" style="display:inline-block; width:auto; margin-left: 5px;">الدرجةُ:</label>
+                <input type="number" id="questionScore_${questionId}" name="questionScore" value="${qScore}" style="width: 80px; display:inline-block;">
+                <button type="button" class="remove-question-btn">حذفُ السؤالِ</button>
+            </div>
+            <div class="options-container" style="display: ${qType === 'multiple-choice' || qType === 'true-false' ? 'block' : 'none'};">
+                <label>الخياراتُ:</label>
+                <div class="options-list">
                     </div>
-                `;
-            }
-        }
+                <button type="button" class="add-option-btn">إضافةُ خيارٍ</button>
+            </div>
+        `;
 
-        // Questions Section (Updated to handle groups)
-        let allQuestionGroupsHtml = '';
-        let currentOverallQuestionNumber = 1; // Reset for preview display
+        container.appendChild(questionBlock);
+
+        // Populate options if available
+        const optionsList = questionBlock.querySelector('.options-list');
+        qOptions.forEach(option => {
+            addOptionToQuestion(optionsList, option.text, option.isCorrect);
+        });
+
+
+        // Add event listeners for new elements
+        questionBlock.querySelector('.remove-question-btn').addEventListener('click', () => {
+            questionBlock.remove();
+            updateQuestionNumbers();
+        });
+
+        const questionTypeSelect = questionBlock.querySelector('.question-type-select');
+        const optionsContainer = questionBlock.querySelector('.options-container');
+
+        questionTypeSelect.addEventListener('change', (event) => {
+            toggleOptionsVisibility(event.target.value, optionsContainer);
+        });
+
+        questionBlock.querySelector('.add-option-btn').addEventListener('click', () => {
+            addOptionToQuestion(optionsList);
+        });
+    }
+
+    // Function to toggle options visibility based on question type
+    function toggleOptionsVisibility(type, optionsContainer) {
+        if (type === 'multiple-choice' || type === 'true-false') {
+            optionsContainer.style.display = 'block';
+            // Clear existing options if type changed to true-false and re-add them
+            const optionsList = optionsContainer.querySelector('.options-list');
+            if (type === 'true-false' && optionsList.children.length !== 2) {
+                optionsList.innerHTML = '';
+                addOptionToQuestion(optionsList, 'صحٌّ', false); // Default to false, correct can be set later
+                addOptionToQuestion(optionsList, 'خطأٌ', false);
+            } else if (type === 'multiple-choice' && optionsList.children.length === 0) {
+                 // If changing back to multiple-choice and no options, add one
+                addOptionToQuestion(optionsList);
+            }
+        } else {
+            optionsContainer.style.display = 'none';
+        }
+    }
+
+
+    // Function to add an option to a multiple-choice question
+    function addOptionToQuestion(optionsList, optionText = '', isCorrect = false) {
+        const optionItem = document.createElement('div');
+        optionItem.classList.add('option-item');
+        const optionId = `option-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`; // Unique ID for option radio
+
+        optionItem.innerHTML = `
+            <input type="radio" name="option_${optionsList.closest('.question-block').dataset.questionId}" id="${optionId}" ${isCorrect ? 'checked' : ''}>
+            <label for="${optionId}"></label>
+            <input type="text" value="${optionText}" placeholder="أدخلْ خيارًا هنا">
+            <button type="button" class="remove-option-btn">حذفُ</button>
+        `;
+        optionsList.appendChild(optionItem);
+
+        // Add event listener for removing option
+        optionItem.querySelector('.remove-option-btn').addEventListener('click', () => {
+            optionItem.remove();
+        });
+    }
+
+    // Function to update question numbers dynamically
+    function updateQuestionNumbers() {
+        let currentQuestionNumber = 1;
+        document.querySelectorAll('.question-group-wrapper').forEach(groupWrapper => {
+            groupWrapper.querySelectorAll('.question-block').forEach(questionBlock => {
+                const questionNumberSpan = questionBlock.querySelector('.question-number');
+                if (questionNumberSpan) {
+                    questionNumberSpan.textContent = currentQuestionNumber;
+                    // Update radio button names to ensure uniqueness across ALL questions
+                    const questionId = questionBlock.dataset.questionId;
+                    const radioButtons = questionBlock.querySelectorAll(`input[type="radio"][name^="option_"]`);
+                    radioButtons.forEach(radio => {
+                        radio.name = `option_question-${currentQuestionNumber}`; // Use current question number for name
+                    });
+                }
+                currentQuestionNumber++;
+            });
+        });
+    }
+
+    // Function to collect all input data
+    function collectContestData() {
+        const data = {
+            contestName: contestNameInput.value.trim(),
+            schoolName: schoolNameInput.value.trim(),
+            teacherName: teacherNameInput.value.trim(),
+            subject: subjectInput.value.trim(),
+            date: dateInput.value.trim(),
+            duration: durationInput.value.trim(),
+            score: scoreInput.value.trim(),
+            title: titleInput.value.trim(),
+            text: textInput.value.trim(),
+            authorSource: authorSourceInput.value.trim(),
+            vocabulary: vocabularyInput.value.trim(),
+            questionGroups: []
+        };
 
         document.querySelectorAll('.question-group-wrapper').forEach(groupWrapper => {
             const groupTitle = groupWrapper.querySelector('.group-title-input').value.trim();
-            let questionsInGroupHtml = '';
+            const questions = [];
 
             groupWrapper.querySelectorAll('.question-block').forEach(questionBlock => {
-                const qText = questionBlock.querySelector('textarea[name="questionText"]').value;
+                const qText = questionBlock.querySelector('textarea[name="questionText"]').value.trim();
                 const qType = questionBlock.querySelector('select[name="questionType"]').value;
-                const qScore = questionBlock.querySelector('input[name="questionScore"]').value;
-                let optionsHtml = '';
+                const qScore = questionBlock.querySelector('input[name="questionScore"]').value.trim();
+                const options = [];
 
-                if (qType === 'multiple-choice') {
-                    const options = Array.from(questionBlock.querySelectorAll('.option-input')).map(input => input.value);
-                    optionsHtml = `
-                        <ul class="options">
-                            ${options.map(option => `<li>${option}</li>`).join('')}
-                        </ul>
-                    `;
-                } else if (qType === 'true-false') {
-                    optionsHtml = `
-                        <ul class="options">
-                            <li>( ) صح</li>
-                            <li>( ) خطأ</li>
-                        </ul>
-                    `;
+                if (qType === 'multiple-choice' || qType === 'true-false') {
+                    questionBlock.querySelectorAll('.options-list .option-item').forEach(optionItem => {
+                        const optionText = optionItem.querySelector('input[type="text"]').value.trim();
+                        const isCorrect = optionItem.querySelector('input[type="radio"]').checked;
+                        options.push({ text: optionText, isCorrect: isCorrect });
+                    });
                 }
 
-                questionsInGroupHtml += `
-                    <div class="question">
-                        <p class="question-text">سؤال ${currentOverallQuestionNumber}${qScore ? ` (${qScore} علامات)` : ''}: ${qText}</p>
-                        ${optionsHtml}
-                    </div>
-                `;
-                currentOverallQuestionNumber++;
+                questions.push({
+                    text: qText,
+                    type: qType,
+                    score: qScore,
+                    options: options
+                });
             });
 
-            if (questionsInGroupHtml) {
-                allQuestionGroupsHtml += `
-                    <div class="question-group-in-doc">
-                        ${groupTitle ? `<h4>${groupTitle}:</h4>` : ''}
-                        ${questionsInGroupHtml}
-                    </div>
-                `;
-            }
+            data.questionGroups.push({
+                title: groupTitle,
+                questions: questions
+            });
         });
+        return data;
+    }
 
-        if (allQuestionGroupsHtml) {
-            contentHtml += `
-                <div class="questions-main-section">
-                    <h3>الأسئلة:</h3>
-                    ${allQuestionGroupsHtml}
-                </div>
-            `;
-        }
+    // Function to populate inputs from data
+    function populateContestData(data) {
+        contestNameInput.value = data.contestName || '';
+        schoolNameInput.value = data.schoolName || '';
+        teacherNameInput.value = data.teacherName || '';
+        subjectInput.value = data.subject || '';
+        dateInput.value = data.date || '';
+        durationInput.value = data.duration || '';
+        scoreInput.value = data.score || '';
+        titleInput.value = data.title || '';
+        textInput.value = data.text || '';
+        authorSourceInput.value = data.authorSource || '';
+        vocabularyInput.value = data.vocabulary || '';
 
-        previewContent.innerHTML = contentHtml;
-    };
+        // Clear existing question groups
+        questionGroupsContainer.innerHTML = '';
+        questionGroupCounter = 0;
+        questionCounter = 0;
 
-    // --- Export Functionality ---
-    exportPdfBtn.addEventListener('click', () => {
-        console.log('Export PDF button clicked.'); // Debugging log
-        generatePreview(); // Ensure content is up-to-date in previewContent
+        // Add question groups and questions
+        if (data.questionGroups && data.questionGroups.length > 0) {
+            data.questionGroups.forEach(group => {
+                const newGroupWrapper = document.createElement('div');
+                newGroupWrapper.classList.add('question-group-wrapper');
+                questionGroupCounter++;
+                const groupId = `group-${questionGroupCounter}`;
+                newGroupWrapper.setAttribute('data-group-id', groupId);
 
-        // Add a temporary class to the body for PDF specific styling adjustments
-        document.body.classList.add('exporting-pdf');
+                newGroupWrapper.innerHTML = `
+                    <div class="question-group-header">
+                        <input type="text" class="group-title-input" placeholder="عنوان قسم الأسئلة (اختياري)" value="${group.title}">
+                        <button type="button" class="remove-group-btn">حذفُ القسمِ</button>
+                    </div>
+                    <div class="questions-in-group-container">
+                        </div>
+                    <button type="button" class="add-question-to-group-btn">إضافةُ سؤالٍ لهذا القسمِ</button>
+                `;
+                questionGroupsContainer.appendChild(newGroupWrapper);
 
-        // Small delay to allow fonts and rendering to settle
-        setTimeout(() => {
-            const element = previewContent;
-            if (!element) {
-                console.error('Preview content element not found for PDF export.');
-                document.body.classList.remove('exporting-pdf');
-                alert('خطأ: لم يتم العثور على محتوى المعاينة لتصديره إلى PDF.');
-                return;
-            }
+                const questionsInGroupContainer = newGroupWrapper.querySelector('.questions-in-group-container');
 
-            const opt = {
-                margin: [0.5, 0.5, 0.5, 0.5], // Top, Left, Bottom, Right (inches)
-                filename: 'مسابقة.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, logging: true, dpi: 192, letterRendering: true, useCORS: true },
-                jsPDF: { unit: 'in', format: 'A4', orientation: 'portrait' },
-                pagebreak: { mode: ['css', 'avoid-all', 'legacy'] }
-            };
+                group.questions.forEach(q => {
+                    addQuestionToGroup(questionsInGroupContainer, q);
+                });
 
-            // Check if html2pdf is loaded
-            if (typeof html2pdf === 'undefined') {
-                console.error('html2pdf.js library is not loaded.');
-                document.body.classList.remove('exporting-pdf');
-                alert('خطأ: مكتبة html2pdf.js غير محملة. الرجاء التأكد من وجود <script> الخاص بها في ملف HTML.');
-                return;
-            }
-
-            html2pdf().set(opt).from(element).save().finally(() => {
-                document.body.classList.remove('exporting-pdf');
-            }).catch(error => {
-                console.error('Error during PDF generation:', error);
-                alert('حدث خطأ أثناء تصدير PDF. يرجى التحقق من وحدة التحكم للمزيد من التفاصيل.');
-                document.body.classList.remove('exporting-pdf');
+                // Re-attach event listeners for newly created group elements
+                newGroupWrapper.querySelector('.remove-group-btn').addEventListener('click', () => {
+                    newGroupWrapper.remove();
+                    updateQuestionNumbers();
+                });
+                newGroupWrapper.querySelector('.add-question-to-group-btn').addEventListener('click', () => {
+                    addQuestionToGroup(questionsInGroupContainer);
+                    updateQuestionNumbers();
+                });
             });
-        }, 500); // Increased delay to 500ms
-    });
-
-    exportWordBtn.addEventListener('click', () => {
-        console.log('Export Word button clicked.'); // Debugging log
-        generatePreview(); // Ensure content is up-to-date in previewContent
-
-        const content = previewContent.innerHTML;
-        if (!content) {
-            console.error('Preview content is empty for Word export.');
-            alert('محتوى المعاينة فارغ، لا يمكن تصديره إلى Word.');
-            return;
+        } else {
+            // If no groups, add one empty group
+            addQuestionGroup();
         }
-
-        const filename = 'مسابقة.doc';
-        const convertedHtml = `
-            <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-            <head>
-                <meta charset='utf-8'>
-                <title>مسابقة</title>
-                <style>
-                    /* Basic styles for Word compatibility */
-                    body {
-                        font-family: 'Simplified Arabic', serif;
-                        direction: rtl;
-                        text-align: right;
-                        line-height: 1.6;
-                    }
-                    .document-content {
-                        font-size: 14pt;
-                        color: #000;
-                        margin: 1in; /* Equivalent to 2.54cm from all sides */
-                        box-sizing: border-box;
-                    }
-                    .document-content h2 {
-                        text-align: center;
-                        font-size: 24pt;
-                        margin-bottom: 20pt;
-                        line-height: 1.2;
-                    }
-                    .document-content .contest-details {
-                        border: 1px solid #ccc;
-                        padding: 10pt;
-                        margin-bottom: 30pt;
-                        font-size: 12pt;
-                    }
-                    .document-content .contest-details div {
-                        display: flex;
-                        justify-content: space-between;
-                        padding: 2pt 0;
-                        margin-bottom: 5pt;
-                    }
-                    .document-content .contest-details span:first-child {
-                        font-weight: bold;
-                        flex-basis: 40%;
-                    }
-                     .document-content .contest-details span:last-child {
-                        flex-basis: 55%;
-                        text-align: left;
-                    }
-                    .document-content .text-section {
-                        margin-bottom: 30pt;
-                        font-size: 14pt;
-                        line-height: 1.8;
-                    }
-                    .document-content .text-section ol {
-                        list-style-type: decimal;
-                        padding-right: 20pt;
-                        margin-right: 0;
-                        margin-left: 0;
-                        list-style-position: inside;
-                    }
-                    .document-content .text-section ol li {
-                        margin-bottom: 10pt;
-                        text-align: justify;
-                        padding-right: 0;
-                    }
-                    .document-content .author-source {
-                        text-align: left;
-                        font-size: 12pt;
-                        margin-top: 20pt;
-                        font-style: italic;
-                    }
-                    .document-content .vocabulary-section {
-                        margin-top: 30pt;
-                        padding-top: 15pt;
-                        border-top: 1px dashed #ccc;
-                        font-size: 10pt;
-                    }
-                    .document-content .vocabulary-section h3 {
-                        font-size: 14pt;
-                        margin-bottom: 10pt;
-                        text-align: right;
-                    }
-                    .document-content .vocabulary-section ol {
-                        list-style-type: decimal;
-                        padding-right: 20pt;
-                        margin-right: 0;
-                        margin-left: 0;
-                        list-style-position: inside;
-                    }
-                    .document-content .vocabulary-section ol li {
-                        margin-bottom: 5pt;
-                        text-align: right;
-                    }
-                    .document-content .questions-main-section {
-                        margin-top: 30pt;
-                        page-break-before: always;
-                    }
-                    .document-content .questions-main-section > h3 {
-                        font-size: 18pt;
-                        margin-bottom: 20pt;
-                        text-align: center;
-                    }
-                    .document-content .question-group-in-doc {
-                        margin-bottom: 30pt;
-                        page-break-inside: avoid;
-                    }
-                    .document-content .question-group-in-doc > h4 {
-                        font-size: 16pt;
-                        margin-bottom: 15pt;
-                        text-align: right;
-                        border-bottom: 1px solid #ccc;
-                        padding-bottom: 5pt;
-                    }
-                    .document-content .question {
-                        margin-bottom: 20pt;
-                        font-size: 14pt;
-                        page-break-inside: avoid;
-                    }
-                    .document-content .question-text {
-                        font-weight: bold;
-                        margin-bottom: 10pt;
-                    }
-                    .document-content .options {
-                        list-style: none;
-                        padding-right: 0;
-                        margin-right: 20pt;
-                        margin-top: 5pt;
-                    }
-                    .document-content .options li {
-                        margin-bottom: 5pt;
-                        text-align: right;
-                    }
-                    p { margin: 0 0 1em; }
-                    ol, ul { margin: 0 0 1em; padding: 0 0 0 40px; }
-                    li { margin-bottom: 0.5em; }
-                    .document-content ol, .document-content ul {
-                        margin-right: 20pt;
-                        padding-right: 0;
-                        margin-left: 0;
-                        padding-left: 0;
-                    }
-                </style>
-            </head>
-            <body>
-                <div class='document-content'>
-                    ${content}
-                </div>
-            </body>
-            </html>
-        `;
-
-        const blob = new Blob([convertedHtml], { type: 'application/msword' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = filename;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    });
-
-    // --- Initial Setup and Event Listeners ---
-
-    // Initial load of saved contests
-    loadSavedContests();
-
-    // Add initial default question group and question if none exist
-    if (questionGroupsContainer.children.length === 0) {
-        const defaultGroup = addQuestionGroup();
-        addQuestionToGroup(defaultGroup.querySelector('.questions-in-group-container'));
-    } else {
-        // If groups already exist (e.g., from a saved load), ensure question numbers are correct
         updateQuestionNumbers();
     }
 
 
-    // Attach main event listeners
+    // Function to generate the preview HTML
+    function generatePreview(data) {
+        let html = `
+            <div class="contest-details">
+                <div><span>التاريخُ:</span><span>${data.date || '----------'}</span></div>
+                <div><span>اسْمُ المدرسةِ:</span><span>${data.schoolName || '----------'}</span></div>
+                <div><span>اسْمُ المعلِّمِ:</span><span>${data.teacherName || '----------'}</span></div>
+                <div><span>المادةُ:</span><span>${data.subject || '----------'}</span></div>
+                <div><span>المدةُ:</span><span>${data.duration || '----------'}</span></div>
+                <div><span>العلامةُ الكليَّةُ:</span><span>${data.score || '----------'}</span></div>
+            </div>
+            <h2>${data.title || 'مسابقةٌ'}</h2>
+        `;
+
+        if (data.text) {
+            html += `<div class="text-section">${formatTextWithNumberedLines(data.text)}</div>`;
+        }
+
+        if (data.authorSource) {
+            html += `<p class="author-source">المصدرُ/المؤلِّفُ: ${data.authorSource}</p>`;
+        }
+
+        if (data.vocabulary) {
+            html += `<div class="vocabulary-section">
+                        <h3>شرحُ المفرداتِ/الحواشي:</h3>
+                        <ul>`;
+            const vocabularyLines = data.vocabulary.split('\n').filter(line => line.trim() !== '');
+            vocabularyLines.forEach(line => {
+                const parts = line.split(':');
+                if (parts.length >= 2) {
+                    html += `<li><strong>${parts[0].trim()}:</strong> ${parts.slice(1).join(':').trim()}</li>`;
+                } else {
+                    html += `<li>${line.trim()}</li>`;
+                }
+            });
+            html += `</ul></div>`;
+        }
+
+        if (data.questionGroups.length > 0) {
+            html += `<div class="questions-main-section"><h3>الأسئلةُ:</h3>`;
+            let currentQNum = 1;
+            data.questionGroups.forEach(group => {
+                if (group.title) {
+                    html += `<div class="question-group-in-doc"><h4>${group.title}:</h4>`;
+                }
+                group.questions.forEach(q => {
+                    html += `<div class="question">
+                                <p class="question-text">سؤالٌ ${currentQNum} (${q.score || 0} علامةٍ): ${q.text}</p>`;
+                    if ((q.type === 'multiple-choice' || q.type === 'true-false') && q.options.length > 0) {
+                        html += `<div class="options-container-in-doc"><ul>`;
+                        q.options.forEach(option => {
+                            html += `<li><input type="radio" disabled> <label>${option.text}</label></li>`;
+                        });
+                        html += `</ul></div>`;
+                    }
+                    html += `</div>`;
+                    currentQNum++;
+                });
+                if (group.title) {
+                    html += `</div>`; // Close question-group-in-doc
+                }
+            });
+            html += `</div>`; // Close questions-main-section
+        }
+
+        previewContent.innerHTML = html;
+    }
+
+    // Helper to format text with numbered lines for preview
+    function formatTextWithNumberedLines(text) {
+        const lines = text.split('\n').filter(line => line.trim() !== '');
+        if (lines.length === 0) return '';
+
+        let formattedText = '<ol>';
+        lines.forEach(line => {
+            formattedText += `<li>${line.trim()}</li>`;
+        });
+        formattedText += '</ol>';
+        return formattedText;
+    }
+
+    // --- Event Listeners ---
+
+    // Initial addition of a question group when the page loads
+    addQuestionGroupBtn.addEventListener('click', () => addQuestionGroup());
+
+    // Preview Button
     previewBtn.addEventListener('click', () => {
-        generatePreview();
+        const data = collectContestData();
+        generatePreview(data);
         inputSection.classList.add('hidden');
         previewSection.classList.remove('hidden');
     });
 
+    // Back to Input Button
     backToInputBtn.addEventListener('click', () => {
         previewSection.classList.add('hidden');
         inputSection.classList.remove('hidden');
     });
 
-    addQuestionGroupBtn.addEventListener('click', () => addQuestionGroup());
+    // Export to PDF
+    exportPdfBtn.addEventListener('click', () => {
+        const element = previewContent; // Target the preview content for PDF
 
-    saveContestBtn.addEventListener('click', saveContest);
+        // Define PDF options
+        const options = {
+            margin: [20, 15, 20, 15], // Top, Left, Bottom, Right
+            filename: `${contestNameInput.value.trim() || 'مسابقة'}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2, logging: true, dpi: 192, letterRendering: true },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(options).from(element).save().then(() => {
+            console.log('PDF generated successfully!');
+        }).catch(error => {
+            console.error('Error during PDF generation:', error);
+            alert('حدثَ خطأٌ أثناءَ تصديرِ PDF. يرجى التحقُّقُ من وحدةِ التحكُّمِ للمزيدِ من التفاصيلِ.');
+        });
+    });
+
+    // Export to Word (Basic HTML to DOC)
+    exportWordBtn.addEventListener('click', () => {
+        const content = previewContent.innerHTML;
+        const filename = `${contestNameInput.value.trim() || 'مسابقة'}.doc`;
+        const blob = new Blob(['<html dir="rtl" lang="ar"><head><meta charset="UTF-8"><style>',
+                                document.querySelector('link[rel="stylesheet"]').outerHTML, // Include CSS link
+                                'body { font-family: \'Cairo\', \'Scheherazade New\', Arial, sans-serif; direction: rtl; }',
+                                // You might need to inline some critical CSS for Word to render it well
+                                '</style></head><body>',
+                                content,
+                                '</body></html>'], { type: 'application/msword' });
+
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        alert('تمَّ تصديرُ المسابقةِ إلى ملفِّ Word.');
+    });
+
+    // --- Save/Load Contest Functions ---
+
+    // Load saved contests into the dropdown
+    function loadSavedContests() {
+        loadContestSelect.innerHTML = '<option value="">استعادةُ مسابقةٍ محفوظةٍ</option>';
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key.startsWith('contest_')) {
+                const contestName = key.substring(8); // Remove 'contest_' prefix
+                const option = document.createElement('option');
+                option.value = key;
+                option.textContent = contestName;
+                loadContestSelect.appendChild(option);
+            }
+        }
+        loadContestBtn.disabled = true; // Disable until a contest is selected
+    }
+
+    // Save Contest
+    saveContestBtn.addEventListener('click', () => {
+        const name = contestNameInput.value.trim();
+        if (name) {
+            const data = collectContestData();
+            try {
+                localStorage.setItem(`contest_${name}`, JSON.stringify(data));
+                alert(`تمَّ حفظُ المسابقةِ باسمِ: "${name}"`);
+                loadSavedContests(); // Refresh dropdown
+            } catch (e) {
+                alert('عذرًا، لا يمكنُ حفظُ المسابقةِ. قد تكونُ الذاكرةُ ممتلئةً أو هناكَ مشكلةٌ في المتصفحِ.');
+                console.error('Local Storage Save Error:', e);
+            }
+        } else {
+            alert('الرجاءُ إدخالُ اسْمٍ للمسابقةِ لحفظِها.');
+        }
+    });
+
+    // Enable Load Button when selection changes
     loadContestSelect.addEventListener('change', () => {
         loadContestBtn.disabled = !loadContestSelect.value;
     });
-    loadContestBtn.addEventListener('click', loadContest);
+
+    // Load Contest
+    loadContestBtn.addEventListener('click', () => {
+        const selectedKey = loadContestSelect.value;
+        if (selectedKey) {
+            try {
+                const storedData = localStorage.getItem(selectedKey);
+                if (storedData) {
+                    const data = JSON.parse(storedData);
+                    populateContestData(data);
+                    alert(`تمَّ استعادةُ المسابقةِ: "${data.contestName}"`);
+                } else {
+                    alert('المسابقةُ المختارةُ غيرُ موجودةٍ.');
+                }
+            } catch (e) {
+                alert('حدثَ خطأٌ أثناءَ استعادةِ المسابقةِ.');
+                console.error('Local Storage Load Error:', e);
+            }
+        }
+    });
+
+    // --- Initial Setup ---
+    loadSavedContests(); // Load contests on page load
+    if (questionGroupsContainer.children.length === 0) {
+        addQuestionGroup(); // Add an initial empty group if none exist
+    }
+    updateQuestionNumbers(); // Initial numbering
 });
