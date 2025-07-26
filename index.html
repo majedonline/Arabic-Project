@@ -3,90 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منشئ المسابقات</title>
+    <title>مولد المسابقات</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Scheherazade+New:wght@400;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Simplified+Arabic&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-    <div class="container">
+    <div id="input-section" class="container">
         <h1>إنشاء مسابقة جديدة</h1>
 
-        <div id="input-section">
-            <div class="form-group">
-                <label for="contestName">اسم المسابقة:</label>
-                <input type="text" id="contestName" placeholder="مثال: مسابقة الأدب العربي">
-                <button id="saveContestBtn">حفظ المسابقة</button>
-                <select id="loadContestSelect">
-                    <option value="">استعادة مسابقة محفوظة</option>
-                </select>
-                <button id="loadContestBtn" disabled>استعادة</button>
-            </div>
-
-            <div class="form-group">
-                <label for="titleInput">عنوان النص:</label>
-                <input type="text" id="titleInput" placeholder="أدخل عنوان النص هنا">
-            </div>
-
-            <div class="form-group">
-                <label for="textInput">النص (اكتب كل فقرة على سطر جديد):</label>
-                <textarea id="textInput" rows="10" placeholder="أدخل النص هنا. كل سطر جديد يعتبر فقرة."></textarea>
-            </div>
-
-            <div class="form-group">
-                <label for="authorSourceInput">اسم صاحب النص والمصدر:</label>
-                <input type="text" id="authorSourceInput" placeholder="مثال: من كتاب الأيام لطه حسين">
-            </div>
-
-            <div class="form-group">
-                <label for="vocabularyInput">شرح المفردات (المفردة: الشرح):</label>
-                <textarea id="vocabularyInput" rows="5" placeholder="مثال: استشرى: استفحل وانتشر&#10;شَفَق: حمرة تظهر في الأفق عند غروب الشمس"></textarea>
-                <small>كل مفردة وشرحها على سطر جديد مفصولة بنقطتين رأسيتين (مثال: المفردة: الشرح)</small>
-            </div>
-
-            <div class="form-group">
-                <label>معلومات المسابقة:</label>
-                <div class="contest-info-grid">
-                    <div><label for="dateInput">التاريخ:</label><input type="date" id="dateInput"></div>
-                    <div><label for="schoolNameInput">اسم المدرسة:</label><input type="text" id="schoolNameInput" placeholder="المدرسة"></div>
-                    <div><label for="teacherNameInput">اسم المعلم:</label><input type="text" id="teacherNameInput" placeholder="اسم المعلم"></div>
-                    <div><label for="subjectInput">المادة:</label><input type="text" id="subjectInput" placeholder="اللغة العربية"></div>
-                    <div><label for="durationInput">المدة:</label><input type="text" id="durationInput" placeholder="45 دقيقة"></div>
-                    <div><label for="scoreInput">العلامة:</label><input type="number" id="scoreInput" placeholder="20"></div>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label>إضافة الأسئلة:</label>
-                <div id="questionGroupsContainer">
-                    <div class="question-group-wrapper">
-                        <div class="question-group-header">
-                            <input type="text" class="group-title-input" placeholder="عنوان قسم الأسئلة (اختياري)">
-                            <button type="button" class="remove-group-btn">حذف القسم</button>
-                        </div>
-                        <div class="questions-in-group-container">
-                            </div>
-                        <button type="button" class="add-question-to-group-btn">إضافة سؤال لهذا القسم</button>
-                    </div>
-                </div>
-                <button id="addQuestionGroupBtn">إضافة قسم أسئلة جديد</button>
-            </div>
-
-            <button id="previewBtn">معاينة المسابقة</button>
+        <div class="form-group">
+            <label for="contestName">اسم المسابقة (للحفظ والاستعادة):</label>
+            <input type="text" id="contestName" placeholder="مثال: مسابقة اللغة العربية للصف السادس">
+            <button id="saveContestBtn">حفظ المسابقة</button>
+            <select id="loadContestSelect">
+                <option value="">استعادة مسابقة محفوظة</option>
+            </select>
+            <button id="loadContestBtn" disabled>استعادة</button>
         </div>
 
-        <div id="preview-section" class="hidden">
-            <h2>معاينة المسابقة</h2>
-            <div id="previewContent" class="document-content">
-                </div>
-            <div class="preview-actions">
-                <button id="backToInputBtn">العودة للتعديل</button>
-                <button id="exportPdfBtn">تصدير إلى PDF</button>
-                <button id="exportWordBtn">تصدير إلى Word</button>
+        <div class="form-group contest-info-grid">
+            <div>
+                <label for="schoolNameInput">اسم المدرسة:</label>
+                <input type="text" id="schoolNameInput">
             </div>
+            <div>
+                <label for="teacherNameInput">اسم المعلم:</label>
+                <input type="text" id="teacherNameInput">
+            </div>
+            <div>
+                <label for="subjectInput">المادة:</label>
+                <input type="text" id="subjectInput">
+            </div>
+            <div>
+                <label for="dateInput">التاريخ:</label>
+                <input type="date" id="dateInput">
+            </div>
+            <div>
+                <label for="durationInput">المدة:</label>
+                <input type="text" id="durationInput" placeholder="مثال: ساعة واحدة">
+            </div>
+            <div>
+                <label for="scoreInput">العلامة الكلية:</label>
+                <input type="number" id="scoreInput" placeholder="مثال: 50">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="titleInput">عنوان المسابقة:</label>
+            <input type="text" id="titleInput" placeholder="مثال: مسابقة فهم المقروء">
+        </div>
+
+        <div class="form-group">
+            <label for="textInput">نص المسابقة (إذا كان هناك نص للمقروء):</label>
+            <textarea id="textInput" placeholder="أدخل هنا نص المسابقة"></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="authorSourceInput">المصدر/المؤلف (اختياري):</label>
+            <input type="text" id="authorSourceInput" placeholder="مثال: من كتاب القراءة للصف الخامس">
+        </div>
+
+        <div class="form-group">
+            <label for="vocabularyInput">شرح المفردات/حواشي (اختياري، كل مفردة في سطر منفصل: كلمة: شرحها):</label>
+            <textarea id="vocabularyInput" rows="5" placeholder="مثال:
+ينهل: يشرب
+يعبر: يقطع"></textarea>
+        </div>
+
+        <h2>أقسام الأسئلة</h2>
+        <div id="questionGroupsContainer">
+            </div>
+        <button id="addQuestionGroupBtn">إضافة قسم أسئلة جديد</button>
+
+        <hr>
+        <button id="previewBtn">معاينة وتصدير</button>
+    </div>
+
+    <div id="preview-section" class="container hidden">
+        <h1>معاينة المسابقة</h1>
+        <div id="previewContent">
+            </div>
+        <div class="preview-actions">
+            <button id="backToInputBtn">العودة للتعديل</button>
+            <button id="exportPdfBtn">تصدير إلى PDF</button>
+            <button id="exportWordBtn">تصدير إلى Word</button>
         </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
