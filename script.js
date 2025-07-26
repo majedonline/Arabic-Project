@@ -1,13 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Get main sections
     const inputSection = document.getElementById('input-section');
     const previewSection = document.getElementById('preview-section');
     const previewContent = document.getElementById('previewContent');
+
+    // Get buttons
     const previewBtn = document.getElementById('previewBtn');
     const backToInputBtn = document.getElementById('backToInputBtn');
     const exportPdfBtn = document.getElementById('exportPdfBtn');
     const exportWordBtn = document.getElementById('exportWordBtn');
 
-    // Input fields
+    // Get input fields
     const contestNameInput = document.getElementById('contestName');
     const titleInput = document.getElementById('titleInput');
     const textInput = document.getElementById('textInput');
@@ -22,21 +25,166 @@ document.addEventListener('DOMContentLoaded', () => {
     const questionGroupsContainer = document.getElementById('questionGroupsContainer');
     const addQuestionGroupBtn = document.getElementById('addQuestionGroupBtn');
 
-    // Save/Load Contest
+    // Save/Load Contest elements
     const saveContestBtn = document.getElementById('saveContestBtn');
     const loadContestSelect = document.getElementById('loadContestSelect');
     const loadContestBtn = document.getElementById('loadContestBtn');
 
     let totalQuestionCounter = 0; // To keep track of overall question numbering for display
 
-    // Helper to format date for display
+    // --- Helper Functions ---
+
+    // Formats date for display
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('ar-EG', options); // Or 'ar-SA' for Saudi Arabia
+        return new Date(dateString).toLocaleDateString('ar-EG', options);
+    };
+
+    // Updates question numbering on the UI
+    const updateQuestionNumbers = () => {
+        let currentNumber = 1;
+        document.querySelectorAll('.question-block').forEach(questionBlock => {
+            // Update the label text for the question
+            const questionLabel = questionBlock.querySelector('label[for^="questionText_"]');
+            if (questionLabel) {
+                questionLabel.textContent = `السؤال ${currentNumber}:`;
+            }
+
+            // Update IDs of the question elements to ensure uniqueness (important for labels and forms)
+            const questionTextarea = questionBlock.querySelector('textarea[name="questionText"]');
+            if (questionTextarea) questionTextarea.id = `questionText_${currentNumber}`;
+
+            const questionTypeSelect = questionBlock.querySelector('select[name="questionType"]');
+            if (questionTypeSelect) questionTypeSelect.id = `questionType_${currentNumber}`;
+
+            const questionScoreInput = questionBlock.querySelector('input[name="questionScore"]');
+            if (questionScoreInput) questionScoreInput.id = `questionScore_${currentNumber}`;
+
+            currentNumber++;
+        });
+        totalQuestionCounter = currentNumber - 1; // Keep totalQuestionCounter updated
+    };
+
+    // --- Question Management Functions ---
+
+    // Adds a new option input to a question's options list
+    const addOption = (optionsList, optionText = '') => {
+        const optionGroup = document.createElement('div');
+        optionGroup.className = 'option-input-group';
+        optionGroup.innerHTML = `
+            <input type="text" class="option-input" placeholder="أدخل الخيار هنا" value="${optionText}">
+            <button type="button" class="remove-option-btn">حذف</button>
+        `;
+        optionGroup.querySelector('.remove-option-btn').addEventListener('click', () => optionGroup.remove());
+        optionsList.appendChild(optionGroup);
+    };
+
+    // Adds a new question block to a specific question group container
+    const addQuestionToGroup = (targetContainer, qText = '', qType = 'text', qScore = '', qOptions = []) => {
+        const questionBlock = document.createElement('div');
+        questionBlock.className = 'question-block';
+
+        // Dynamic IDs are placeholder, updateQuestionNumbers will set final IDs
+        questionBlock.innerHTML = `
+            <div class="form-group">
+                <label for="questionText_PLACEHOLDER">السؤال :</label>
+                <textarea id="questionText_PLACEHOLDER" name="questionText" rows="3" placeholder="أدخل نص السؤال هنا">${qText}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="questionType_PLACEHOLDER">نوع السؤال:</label>
+                <select id="questionType_PLACEHOLDER" name="questionType" class="question-type-select">
+                    <option value="text" ${qType === 'text' ? 'selected' : ''}>نصي</option>
+                    <option value="multiple-choice" ${qType === 'multiple-choice' ? 'selected' : ''}>اختيار من متعدد</option>
+                    <option value="true-false" ${qType === 'true-false' ? 'selected' : ''}>صح/خطأ</option>
+                </select>
+                <label for="questionScore_PLACEHOLDER" style="display:inline-block; width:auto; margin-right: 5px;">الدرجة:</label>
+                <input type="number" id="questionScore_PLACEHOLDER" name="questionScore" value="${qScore}" style="width: 80px; display:inline-block;">
+                <button type="button" class="remove-question-btn">حذف السؤال</button>
+            </div>
+            <div class="options-container" style="${qType === 'multiple-choice' ? '' : 'display:none;'}">
+                <label>الخيارات:</label>
+                <div class="options-list">
+                    </div>
+                <button type="button" class="add-option-btn">إضافة خيار</button>
+            </div>
+        `;
+
+        // Get elements within the new question block to attach event listeners
+        const typeSelect = questionBlock.querySelector(`select[name="questionType"]`);
+        const optionsContainer = questionBlock.querySelector('.options-container');
+        const optionsList = questionBlock.querySelector('.options-list');
+        const addOptionButton = questionBlock.querySelector('.add-option-btn');
+        const removeQuestionButton = questionBlock.querySelector('.remove-question-btn');
+
+        // Populate options if loading an existing multiple-choice question
+        if (qType === 'multiple-choice') {
+            if (qOptions.length > 0) {
+                qOptions.forEach(optionText => {
+                    addOption(optionsList, optionText);
+                });
+            } else { // For new multiple-choice questions or loaded ones without options
+                addOption(optionsList);
+                addOption(optionsList);
+            }
+        }
+
+        // Attach event listeners for the new question block
+        typeSelect.addEventListener('change', () => {
+            if (typeSelect.value === 'multiple-choice') {
+                optionsContainer.style.display = 'block';
+                if (optionsList.children.length === 0) { // Add default options if none exist
+                    addOption(optionsList);
+                    addOption(optionsList);
+                }
+            } else {
+                optionsContainer.style.display = 'none';
+            }
+        });
+
+        addOptionButton.addEventListener('click', () => addOption(optionsList));
+        removeQuestionButton.addEventListener('click', () => {
+            questionBlock.remove();
+            updateQuestionNumbers(); // Re-number after removal
+        });
+
+        targetContainer.appendChild(questionBlock);
+        updateQuestionNumbers(); // Update numbers immediately after adding
+    };
+
+    // Adds a new question group (section)
+    const addQuestionGroup = (groupTitle = '') => {
+        const groupWrapper = document.createElement('div');
+        groupWrapper.className = 'question-group-wrapper';
+        groupWrapper.innerHTML = `
+            <div class="question-group-header">
+                <input type="text" class="group-title-input" placeholder="عنوان قسم الأسئلة (اختياري)" value="${groupTitle}">
+                <button type="button" class="remove-group-btn">حذف القسم</button>
+            </div>
+            <div class="questions-in-group-container">
+                </div>
+            <button type="button" class="add-question-to-group-btn">إضافة سؤال لهذا القسم</button>
+        `;
+
+        // Attach event listeners for the new group
+        const removeGroupBtn = groupWrapper.querySelector('.remove-group-btn');
+        removeGroupBtn.addEventListener('click', () => {
+            if (confirm('هل أنت متأكد أنك تريد حذف هذا القسم بكل أسئلته؟')) {
+                groupWrapper.remove();
+                updateQuestionNumbers(); // Re-number questions after a group is removed
+            }
+        });
+
+        const addQuestionToGroupBtn = groupWrapper.querySelector('.add-question-to-group-btn');
+        const questionsInGroupContainer = groupWrapper.querySelector('.questions-in-group-container');
+        addQuestionToGroupBtn.addEventListener('click', () => addQuestionToGroup(questionsInGroupContainer));
+
+        questionGroupsContainer.appendChild(groupWrapper);
+        return groupWrapper; // Return the created group element
     };
 
     // --- Save/Load Functionality ---
+
     const saveContest = () => {
         const contestName = contestNameInput.value.trim();
         if (!contestName) {
@@ -127,7 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 questionGroupsContainer.innerHTML = '';
                 totalQuestionCounter = 0;
 
-                if (contestData.questionGroups && Array.isArray(contestData.questionGroups)) {
+                if (contestData.questionGroups && Array.isArray(contestData.questionGroups) && contestData.questionGroups.length > 0) {
                     contestData.questionGroups.forEach(group => {
                         const newGroupWrapper = addQuestionGroup(group.title);
                         if (group.questions && Array.isArray(group.questions)) {
@@ -136,11 +284,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                         }
                     });
-                }
-                // If no groups loaded or if the data structure for questions is empty, add a default empty group
-                if (questionGroupsContainer.children.length === 0 || !contestData.questionGroups || contestData.questionGroups.length === 0) {
+                } else {
+                    // If no groups loaded or empty, add a default empty group and question
                     const defaultGroup = addQuestionGroup();
-                    addQuestionToGroup(defaultGroup.querySelector('.questions-in-group-container')); // Add an initial question
+                    addQuestionToGroup(defaultGroup.querySelector('.questions-in-group-container'));
                 }
                 alert(`تم استعادة المسابقة "${selectedKey.substring('contest_'.length)}"`);
             }
@@ -150,157 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    saveContestBtn.addEventListener('click', saveContest);
-    loadContestSelect.addEventListener('change', () => {
-        loadContestBtn.disabled = !loadContestSelect.value;
-    });
-    loadContestBtn.addEventListener('click', loadContest);
-
-    // Initial load of saved contests
-    loadSavedContests();
-
-    // --- Question Group Management ---
-    const addQuestionGroup = (groupTitle = '') => {
-        const groupWrapper = document.createElement('div');
-        groupWrapper.className = 'question-group-wrapper';
-        groupWrapper.innerHTML = `
-            <div class="question-group-header">
-                <input type="text" class="group-title-input" placeholder="عنوان قسم الأسئلة (اختياري)" value="${groupTitle}">
-                <button type="button" class="remove-group-btn">حذف القسم</button>
-            </div>
-            <div class="questions-in-group-container">
-                </div>
-            <button type="button" class="add-question-to-group-btn">إضافة سؤال لهذا القسم</button>
-        `;
-
-        // Attach event listeners for the new group
-        const removeGroupBtn = groupWrapper.querySelector('.remove-group-btn');
-        removeGroupBtn.addEventListener('click', () => {
-            if (confirm('هل أنت متأكد أنك تريد حذف هذا القسم بكل أسئلته؟')) {
-                groupWrapper.remove();
-                updateQuestionNumbers(); // Re-number questions after a group is removed
-            }
-        });
-
-        const addQuestionToGroupBtn = groupWrapper.querySelector('.add-question-to-group-btn');
-        const questionsInGroupContainer = groupWrapper.querySelector('.questions-in-group-container');
-        addQuestionToGroupBtn.addEventListener('click', () => addQuestionToGroup(questionsInGroupContainer));
-
-        questionGroupsContainer.appendChild(groupWrapper);
-        return groupWrapper; // Return the created group element
-    };
-
-    addQuestionGroupBtn.addEventListener('click', () => addQuestionGroup());
-
-    // --- Question Management ---
-    const addQuestionToGroup = (targetContainer, qText = '', qType = 'text', qScore = '', qOptions = []) => {
-        // totalQuestionCounter is incremented within updateQuestionNumbers to ensure correct sequence
-        const questionBlock = document.createElement('div');
-        questionBlock.className = 'question-block';
-        // No need for dataset.questionId here, as updateQuestionNumbers will manage display numbers
-
-        questionBlock.innerHTML = `
-            <div class="form-group">
-                <label for="questionText_DYNAMIC_ID">السؤال :</label> <textarea id="questionText_DYNAMIC_ID" name="questionText" rows="3" placeholder="أدخل نص السؤال هنا">${qText}</textarea>
-            </div>
-            <div class="form-group">
-                <label for="questionType_DYNAMIC_ID">نوع السؤال:</label>
-                <select id="questionType_DYNAMIC_ID" name="questionType" class="question-type-select">
-                    <option value="text" ${qType === 'text' ? 'selected' : ''}>نصي</option>
-                    <option value="multiple-choice" ${qType === 'multiple-choice' ? 'selected' : ''}>اختيار من متعدد</option>
-                    <option value="true-false" ${qType === 'true-false' ? 'selected' : ''}>صح/خطأ</option>
-                </select>
-                <label for="questionScore_DYNAMIC_ID" style="display:inline-block; width:auto; margin-right: 5px;">الدرجة:</label>
-                <input type="number" id="questionScore_DYNAMIC_ID" name="questionScore" value="${qScore}" style="width: 80px; display:inline-block;">
-                <button type="button" class="remove-question-btn">حذف السؤال</button>
-            </div>
-            <div class="options-container" style="${qType === 'multiple-choice' ? '' : 'display:none;'}">
-                <label>الخيارات:</label>
-                <div class="options-list">
-                    </div>
-                <button type="button" class="add-option-btn">إضافة خيار</button>
-            </div>
-        `;
-
-        const typeSelect = questionBlock.querySelector(`select[name="questionType"]`);
-        const optionsContainer = questionBlock.querySelector('.options-container');
-        const optionsList = questionBlock.querySelector('.options-list');
-        const addOptionButton = questionBlock.querySelector('.add-option-btn');
-        const removeQuestionButton = questionBlock.querySelector('.remove-question-btn');
-
-        // Add pre-existing options for multiple choice
-        if (qType === 'multiple-choice' && qOptions.length > 0) {
-            qOptions.forEach(optionText => {
-                addOption(optionsList, optionText);
-            });
-        } else if (qType === 'multiple-choice' && qOptions.length === 0) {
-            // Add default empty options if no options are provided for a new MC question
-            addOption(optionsList);
-            addOption(optionsList);
-        }
-
-        typeSelect.addEventListener('change', () => {
-            if (typeSelect.value === 'multiple-choice') {
-                optionsContainer.style.display = 'block';
-                if (optionsList.children.length === 0) {
-                    addOption(optionsList);
-                    addOption(optionsList);
-                }
-            } else {
-                optionsContainer.style.display = 'none';
-            }
-        });
-
-        addOptionButton.addEventListener('click', () => addOption(optionsList));
-        removeQuestionButton.addEventListener('click', () => {
-            questionBlock.remove();
-            updateQuestionNumbers(); // Re-number questions after one is removed
-        });
-
-        targetContainer.appendChild(questionBlock);
-        updateQuestionNumbers(); // Update numbers immediately after adding a question
-    };
-
-    const addOption = (optionsList, optionText = '') => {
-        const optionGroup = document.createElement('div');
-        optionGroup.className = 'option-input-group';
-        optionGroup.innerHTML = `
-            <input type="text" class="option-input" placeholder="أدخل الخيار هنا" value="${optionText}">
-            <button type="button" class="remove-option-btn">حذف</button>
-        `;
-        optionGroup.querySelector('.remove-option-btn').addEventListener('click', () => optionGroup.remove());
-        optionsList.appendChild(optionGroup);
-    };
-
-    // Function to re-number questions after removal or addition
-    const updateQuestionNumbers = () => {
-        let currentNumber = 1;
-        document.querySelectorAll('.question-block').forEach(questionBlock => {
-            // Update the label text
-            questionBlock.querySelector('label[for^="questionText_"]').textContent = `السؤال ${currentNumber}:`;
-
-            // Update IDs of the question elements to ensure uniqueness
-            questionBlock.querySelector('textarea[name="questionText"]').id = `questionText_${currentNumber}`;
-            questionBlock.querySelector('select[name="questionType"]').id = `questionType_${currentNumber}`;
-            questionBlock.querySelector('input[name="questionScore"]').id = `questionScore_${currentNumber}`;
-
-            currentNumber++;
-        });
-        totalQuestionCounter = currentNumber - 1; // Keep totalQuestionCounter updated
-    };
-
-    // --- Preview Functionality ---
-    previewBtn.addEventListener('click', () => {
-        generatePreview();
-        inputSection.classList.add('hidden');
-        previewSection.classList.remove('hidden');
-    });
-
-    backToInputBtn.addEventListener('click', () => {
-        previewSection.classList.add('hidden');
-        inputSection.classList.remove('hidden');
-    });
-
+    // --- Preview Generation ---
     const generatePreview = () => {
         let contentHtml = '';
 
@@ -433,6 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Export Functionality ---
     exportPdfBtn.addEventListener('click', () => {
+        console.log('Export PDF button clicked.'); // Debugging log
         generatePreview(); // Ensure content is up-to-date in previewContent
 
         // Add a temporary class to the body for PDF specific styling adjustments
@@ -441,6 +439,13 @@ document.addEventListener('DOMContentLoaded', () => {
         // Small delay to allow fonts and rendering to settle
         setTimeout(() => {
             const element = previewContent;
+            if (!element) {
+                console.error('Preview content element not found for PDF export.');
+                document.body.classList.remove('exporting-pdf');
+                alert('خطأ: لم يتم العثور على محتوى المعاينة لتصديره إلى PDF.');
+                return;
+            }
+
             const opt = {
                 margin: [0.5, 0.5, 0.5, 0.5], // Top, Left, Bottom, Right (inches)
                 filename: 'مسابقة.pdf',
@@ -450,16 +455,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 pagebreak: { mode: ['css', 'avoid-all', 'legacy'] }
             };
 
+            // Check if html2pdf is loaded
+            if (typeof html2pdf === 'undefined') {
+                console.error('html2pdf.js library is not loaded.');
+                document.body.classList.remove('exporting-pdf');
+                alert('خطأ: مكتبة html2pdf.js غير محملة. الرجاء التأكد من وجود <script> الخاص بها في ملف HTML.');
+                return;
+            }
+
             html2pdf().set(opt).from(element).save().finally(() => {
+                document.body.classList.remove('exporting-pdf');
+            }).catch(error => {
+                console.error('Error during PDF generation:', error);
+                alert('حدث خطأ أثناء تصدير PDF. يرجى التحقق من وحدة التحكم للمزيد من التفاصيل.');
                 document.body.classList.remove('exporting-pdf');
             });
         }, 500); // Increased delay to 500ms
     });
 
     exportWordBtn.addEventListener('click', () => {
+        console.log('Export Word button clicked.'); // Debugging log
         generatePreview(); // Ensure content is up-to-date in previewContent
 
         const content = previewContent.innerHTML;
+        if (!content) {
+            console.error('Preview content is empty for Word export.');
+            alert('محتوى المعاينة فارغ، لا يمكن تصديره إلى Word.');
+            return;
+        }
+
         const filename = 'مسابقة.doc';
         const convertedHtml = `
             <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
@@ -506,8 +530,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         flex-basis: 55%;
                         text-align: left;
                     }
-
-
                     .document-content .text-section {
                         margin-bottom: 30pt;
                         font-size: 14pt;
@@ -620,10 +642,38 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.removeChild(link);
     });
 
-    // Initial setup: Add a default question group with one question
-    // This is run only once on initial page load if no groups exist
+    // --- Initial Setup and Event Listeners ---
+
+    // Initial load of saved contests
+    loadSavedContests();
+
+    // Add initial default question group and question if none exist
     if (questionGroupsContainer.children.length === 0) {
         const defaultGroup = addQuestionGroup();
         addQuestionToGroup(defaultGroup.querySelector('.questions-in-group-container'));
+    } else {
+        // If groups already exist (e.g., from a saved load), ensure question numbers are correct
+        updateQuestionNumbers();
     }
+
+
+    // Attach main event listeners
+    previewBtn.addEventListener('click', () => {
+        generatePreview();
+        inputSection.classList.add('hidden');
+        previewSection.classList.remove('hidden');
+    });
+
+    backToInputBtn.addEventListener('click', () => {
+        previewSection.classList.add('hidden');
+        inputSection.classList.remove('hidden');
+    });
+
+    addQuestionGroupBtn.addEventListener('click', () => addQuestionGroup());
+
+    saveContestBtn.addEventListener('click', saveContest);
+    loadContestSelect.addEventListener('change', () => {
+        loadContestBtn.disabled = !loadContestSelect.value;
+    });
+    loadContestBtn.addEventListener('click', loadContest);
 });
