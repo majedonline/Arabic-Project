@@ -95,7 +95,44 @@ button:disabled {
     margin-bottom: 0;
 }
 
-/* Question Styling */
+/* Question Group & Question Styling */
+.question-group-wrapper {
+    background-color: #eaf6ff; /* Light blue background for groups */
+    border: 1px solid #cce5ff; /* Border for groups */
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.question-group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #bbddff;
+}
+
+.group-title-input {
+    flex-grow: 1;
+    margin-bottom: 0;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #0056b3;
+}
+
+.remove-group-btn {
+    background-color: #dc3545;
+    margin-top: 0;
+    padding: 8px 15px;
+    font-size: 0.9em;
+}
+
+.remove-group-btn:hover {
+    background-color: #c82333;
+}
+
 .question-block {
     background-color: #f9f9f9;
     border: 1px solid #e0e0e0;
@@ -133,7 +170,7 @@ button:disabled {
     margin-bottom: 0;
 }
 
-.add-option-btn, .remove-option-btn, .remove-question-btn {
+.add-option-btn, .remove-option-btn, .add-question-to-group-btn, .remove-question-btn {
     background-color: #28a745;
     margin-right: 5px;
     padding: 6px 10px;
@@ -145,7 +182,7 @@ button:disabled {
     background-color: #dc3545;
 }
 
-.add-option-btn:hover { background-color: #218838; }
+.add-option-btn:hover, .add-question-to-group-btn:hover { background-color: #218838; }
 .remove-option-btn:hover, .remove-question-btn:hover { background-color: #c82333; }
 
 
@@ -257,21 +294,35 @@ button:disabled {
     text-align: right;
 }
 
-.document-content .questions-section {
+/* Questions Section */
+.document-content .questions-main-section {
     margin-top: 30pt;
     page-break-before: always; /* Start questions on a new page */
 }
 
-.document-content .questions-section h3 {
+.document-content .questions-main-section > h3 { /* Main section title */
     font-size: 18pt;
     margin-bottom: 20pt;
     text-align: center;
 }
 
+.document-content .question-group-in-doc {
+    margin-bottom: 30pt;
+    page-break-inside: avoid; /* Keep group together if possible */
+}
+
+.document-content .question-group-in-doc > h4 {
+    font-size: 16pt;
+    margin-bottom: 15pt;
+    text-align: right;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 5pt;
+}
+
 .document-content .question {
     margin-bottom: 20pt;
     font-size: 14pt;
-    page-break-inside: avoid; /* Keep questions together if possible */
+    page-break-inside: avoid; /* Keep individual questions together if possible */
 }
 
 .document-content .question-text {
