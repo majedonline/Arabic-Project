@@ -1,32 +1,64 @@
+/* General Body Styles */
 body {
-    font-family: 'Scheherazade New', serif;
-    background-color: #f4f4f4;
-    direction: rtl;
-    text-align: right;
+    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif; /* استخدام Cairo كخط رئيسي و Scheherazade كاحتياطي */
+    direction: rtl; /* Right-to-Left for Arabic */
     margin: 0;
     padding: 20px;
+    background-color: #f4f7f6;
+    color: #333;
     line-height: 1.6;
 }
 
 .container {
-    max-width: 900px;
-    margin: 20px auto;
-    background: #fff;
+    background-color: #fff;
     padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 30px auto;
+    border-right: 5px solid #4CAF50; /* A touch of color */
 }
 
-h1, h2 {
-    color: #333;
+.container.hidden {
+    display: none;
+}
+
+h1, h2, h3, h4 {
+    font-family: 'Scheherazade New', 'Cairo', serif; /* Scheherazade New للعناوين لجمال الخط العربي */
+    color: #2c3e50;
     text-align: center;
     margin-bottom: 25px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
 }
 
+h1 {
+    font-size: 2.2em;
+    color: #4CAF50;
+}
+
+h2 {
+    font-size: 1.8em;
+    color: #3498db;
+}
+
+h3 {
+    font-size: 1.5em;
+    color: #e67e22;
+    text-align: right;
+    margin-right: 15px;
+}
+
+h4 {
+    font-size: 1.3em;
+    color: #8e44ad;
+    text-align: right;
+    margin-right: 15px;
+}
+
+/* Form Group Styles */
 .form-group {
     margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
 }
 
 .form-group label {
@@ -34,22 +66,30 @@ h1, h2 {
     margin-bottom: 8px;
     font-weight: bold;
     color: #555;
-    font-size: 1.1em;
 }
 
-input[type="text"],
-input[type="number"],
-input[type="date"],
-textarea,
-select {
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="number"],
+.form-group textarea,
+.form-group select {
     width: calc(100% - 20px);
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 12px;
     border: 1px solid #ddd;
     border-radius: 5px;
     font-size: 1em;
-    box-sizing: border-box; /* Ensures padding doesn't add to total width */
-    font-family: 'Simplified Arabic', serif; /* Or 'Scheherazade New' */
+    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="date"]:focus,
+.form-group input[type="number"]:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #4CAF50;
+    outline: none;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
 }
 
 textarea {
@@ -57,20 +97,28 @@ textarea {
     min-height: 80px;
 }
 
+/* Button Styles */
 button {
-    background-color: #007bff;
+    background-color: #4CAF50;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    font-size: 1em;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-left: 10px; /* Adjust margin for RTL */
+    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif;
 }
 
 button:hover {
-    background-color: #0056b3;
+    background-color: #45a049;
+    transform: translateY(-2px);
+}
+
+button:active {
+    background-color: #3e8e41;
+    transform: translateY(0);
 }
 
 button:disabled {
@@ -78,31 +126,66 @@ button:disabled {
     cursor: not-allowed;
 }
 
+/* Specific Button Adjustments */
+#previewBtn, #exportPdfBtn, #exportWordBtn, #backToInputBtn {
+    display: block;
+    width: auto;
+    margin: 20px auto;
+    padding: 15px 30px;
+    font-size: 1.2em;
+}
+
+#previewBtn {
+    background-color: #3498db;
+}
+#previewBtn:hover {
+    background-color: #2980b9;
+}
+
+#exportPdfBtn {
+    background-color: #e74c3c; /* Red for PDF export */
+}
+#exportPdfBtn:hover {
+    background-color: #c0392b;
+}
+
+#exportWordBtn {
+    background-color: #27ae60; /* Green for Word export */
+}
+#exportWordBtn:hover {
+    background-color: #229954;
+}
+
+#backToInputBtn {
+    background-color: #f39c12; /* Orange for back button */
+}
+#backToInputBtn:hover {
+    background-color: #e67e22;
+}
+
 /* Contest Info Grid */
 .contest-info-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 25px;
 }
 
-.contest-info-grid label {
-    font-weight: normal;
-    margin-bottom: 5px;
-    font-size: 1em;
+/* Question Group Styles */
+#questionGroupsContainer {
+    border: 1px dashed #ccc;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
 }
 
-.contest-info-grid input {
-    margin-bottom: 0;
-}
-
-/* Question Group & Question Styling */
 .question-group-wrapper {
-    background-color: #eaf6ff; /* Light blue background for groups */
-    border: 1px solid #cce5ff; /* Border for groups */
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
     border-radius: 8px;
     padding: 15px;
     margin-bottom: 20px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .question-group-header {
@@ -110,296 +193,250 @@ button:disabled {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+    border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
-    border-bottom: 1px dashed #bbddff;
 }
 
-.group-title-input {
+.question-group-header input[type="text"] {
     flex-grow: 1;
-    margin-bottom: 0;
+    margin-left: 10px;
     font-size: 1.1em;
     font-weight: bold;
-    color: #0056b3;
+    color: #4CAF50;
+    border: none;
+    background: transparent;
+}
+.question-group-header input[type="text"]:focus {
+    border-color: #ddd; /* Maintain subtle border on focus */
 }
 
-.remove-group-btn {
-    background-color: #dc3545;
-    margin-top: 0;
-    padding: 8px 15px;
-    font-size: 0.9em;
-}
 
-.remove-group-btn:hover {
-    background-color: #c82333;
+.questions-in-group-container {
+    margin-top: 15px;
 }
 
 .question-block {
-    background-color: #f9f9f9;
+    background-color: #fff;
     border: 1px solid #e0e0e0;
-    border-radius: 8px;
+    border-radius: 5px;
     padding: 15px;
     margin-bottom: 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
-.question-block .form-group {
-    border-bottom: none;
-    padding-bottom: 0;
+.remove-group-btn, .remove-question-btn {
+    background-color: #e74c3c;
+    color: white;
+    padding: 8px 12px;
+    font-size: 0.9em;
+    border-radius: 5px;
+}
+.remove-group-btn:hover, .remove-question-btn:hover {
+    background-color: #c0392b;
+}
+
+.add-question-to-group-btn, .add-option-btn {
+    background-color: #5cb85c;
+    padding: 8px 12px;
+    font-size: 0.9em;
+    margin-top: 10px;
+    display: inline-block;
+}
+.add-question-to-group-btn:hover, .add-option-btn:hover {
+    background-color: #4cae4c;
+}
+
+.options-container {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #eee;
+}
+
+.options-list {
+    margin-top: 10px;
+}
+
+.option-item {
+    display: flex;
+    align-items: center;
     margin-bottom: 10px;
 }
 
-.question-block .form-group label {
+.option-item input[type="radio"] {
+    margin-left: 10px; /* Adjust for RTL */
+}
+
+.option-item input[type="text"] {
+    flex-grow: 1;
+    margin-left: 10px; /* Space between input and remove button */
+}
+
+.remove-option-btn {
+    background-color: #f0ad4e;
+    padding: 5px 8px;
+    font-size: 0.8em;
+}
+.remove-option-btn:hover {
+    background-color: #ec971f;
+}
+
+/* Preview Section Styles (for PDF output) */
+#previewContent {
+    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+    min-height: 400px;
+    margin-bottom: 30px;
+    direction: rtl; /* Ensure RTL for preview content */
+    text-align: right; /* Ensure text alignment for preview */
+}
+
+.contest-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f0f8ff; /* Light blue background */
+}
+
+.contest-details div {
     font-size: 0.95em;
+    color: #444;
+}
+
+.contest-details span:first-child {
     font-weight: bold;
+    color: #555;
+    margin-left: 5px; /* Space between label and value */
 }
 
-.question-type-select {
-    width: auto;
-    display: inline-block;
-    margin-right: 10px;
+.text-section {
+    background-color: #fdfdfd;
+    border: 1px solid #e9e9e9;
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    line-height: 1.8;
+    text-align: justify; /* Justify text for better readability */
 }
-
-.option-input-group {
-    display: flex;
-    align-items: center;
+.text-section ol {
+    padding-right: 25px; /* Adjust for RTL numbered lists */
+    padding-left: 0;
+}
+.text-section li {
     margin-bottom: 8px;
 }
 
-.option-input-group input[type="text"] {
-    flex-grow: 1;
-    margin-bottom: 0;
-}
-
-.add-option-btn, .remove-option-btn, .add-question-to-group-btn, .remove-question-btn {
-    background-color: #28a745;
-    margin-right: 5px;
-    padding: 6px 10px;
-    font-size: 0.9em;
-    margin-top: 0;
-}
-
-.remove-option-btn, .remove-question-btn {
-    background-color: #dc3545;
-}
-
-.add-option-btn:hover, .add-question-to-group-btn:hover { background-color: #218838; }
-.remove-option-btn:hover, .remove-question-btn:hover { background-color: #c82333; }
-
-
-/* Preview Section */
-.hidden {
-    display: none;
-}
-
-#previewContent {
-    background-color: #fff;
-    padding: 30px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    min-height: 500px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-    line-height: 1.8;
-}
-
-.document-content {
-    /* Styles for the generated document - crucial for PDF/Word export */
-    font-family: 'Simplified Arabic', serif; /* Use Simplified Arabic for document content */
-    font-size: 14pt;
-    color: #000;
-    margin: 0 auto; /* Centering for better preview */
-    padding: 2cm; /* Standard A4 margins */
-    box-sizing: border-box;
-    min-height: 29.7cm; /* A4 height */
-    max-width: 21cm; /* A4 width */
-    overflow: hidden; /* Ensure content stays within bounds */
-}
-
-.document-content h2 {
-    text-align: center;
-    font-size: 24pt;
-    margin-bottom: 20pt;
-    line-height: 1.2;
-}
-
-.document-content .contest-details {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10pt;
-    margin-bottom: 30pt;
-    padding: 10pt;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 12pt;
-    font-family: 'Simplified Arabic', serif;
-}
-
-.document-content .contest-details div {
-    display: flex;
-    justify-content: space-between;
-    padding: 2pt 0;
-}
-
-.document-content .contest-details span {
-    font-weight: bold;
-}
-/* Specific alignment for details within the grid for RTL */
-.document-content .contest-details div span:first-child {
-    text-align: right;
-    flex-basis: 40%; /* Allocate space for label */
-}
-.document-content .contest-details div span:last-child {
-    text-align: left; /* Value aligns left within its column */
-    flex-basis: 55%; /* Allocate space for value */
-}
-
-
-.document-content .text-section {
-    margin-bottom: 30pt;
-    font-size: 14pt;
-    line-height: 1.8;
-}
-
-.document-content .text-section ol {
-    list-style: decimal inside; /* Numbers inside the line */
-    padding: 0;
-    margin: 0;
-}
-
-.document-content .text-section ol li {
-    margin-bottom: 10pt;
-    font-size: 14pt;
-    text-align: justify;
-    padding-right: 0; /* Remove default padding for rtl list */
-}
-
-.document-content .author-source {
-    text-align: left; /* Aligned to left for RTL */
-    font-size: 12pt;
-    margin-top: 20pt;
+p.author-source {
     font-style: italic;
-    font-family: 'Simplified Arabic', serif;
+    text-align: left; /* Align source to the left for Arabic context */
+    color: #777;
+    margin-top: 15px;
 }
 
-.document-content .vocabulary-section {
-    margin-top: 30pt;
-    padding-top: 15pt;
-    border-top: 1px dashed #ccc;
-    font-size: 10pt;
-    font-family: 'Simplified Arabic', serif;
+.questions-main-section {
+    margin-top: 30px;
+    border-top: 2px dashed #ddd;
+    padding-top: 20px;
 }
 
-.document-content .vocabulary-section h3 {
-    font-size: 14pt;
-    margin-bottom: 10pt;
+.question-group-in-doc {
+    margin-bottom: 30px;
+}
+
+.question-group-in-doc h4 {
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    color: #3498db;
     text-align: right;
 }
 
-.document-content .vocabulary-section ol {
-    list-style: decimal inside;
-    padding: 0;
-    margin: 0;
+.question {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px dotted #ccc;
 }
 
-.document-content .vocabulary-section ol li {
-    margin-bottom: 5pt;
-    text-align: right;
+.question:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
 }
 
-/* Questions Section */
-.document-content .questions-main-section {
-    margin-top: 30pt;
-    page-break-before: always; /* Start questions on a new page */
-}
-
-.document-content .questions-main-section > h3 { /* Main section title */
-    font-size: 18pt;
-    margin-bottom: 20pt;
-    text-align: center;
-}
-
-.document-content .question-group-in-doc {
-    margin-bottom: 30pt;
-    page-break-inside: avoid; /* Keep group together if possible */
-}
-
-.document-content .question-group-in-doc > h4 {
-    font-size: 16pt;
-    margin-bottom: 15pt;
-    text-align: right;
-    border-bottom: 1px solid #ccc;
-    padding-bottom: 5pt;
-}
-
-.document-content .question {
-    margin-bottom: 20pt;
-    font-size: 14pt;
-    page-break-inside: avoid; /* Keep individual questions together if possible */
-}
-
-.document-content .question-text {
+.question-text {
     font-weight: bold;
-    margin-bottom: 10pt;
+    margin-bottom: 10px;
+    color: #333;
+    line-height: 1.7;
+    text-align: justify;
 }
 
-.document-content .options {
-    list-style: none;
+.question .options-container-in-doc ul {
+    list-style-type: none;
     padding: 0;
-    margin-top: 5pt;
+    margin-top: 10px;
 }
 
-.document-content .options li {
-    margin-bottom: 5pt;
+.question .options-container-in-doc li {
+    margin-bottom: 5px;
+    color: #555;
 }
 
 .preview-actions {
-    text-align: center;
-    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
 }
 
-.preview-actions button {
-    margin: 0 10px;
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+        margin: 20px auto;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+    }
+
+    .contest-info-grid {
+        grid-template-columns: 1fr; /* Stack columns on small screens */
+    }
+
+    button {
+        width: 100%;
+        margin-left: 0;
+        margin-bottom: 10px;
+    }
+
+    .preview-actions button {
+        width: calc(50% - 10px); /* Two buttons per row */
+        margin-bottom: 10px;
+    }
 }
 
-/* Specific styling for Word export compatibility */
-.document-content p {
-    margin-bottom: 1em; /* Standard paragraph spacing for Word */
-}
-/* Ensure consistent padding/margin for lists in Word */
-.document-content ol, .document-content ul {
-    margin-right: 1.5em; /* Adjust for RTL lists */
-    margin-left: 0;
-    padding-right: 0;
-    padding-left: 0;
-}
-.document-content li {
-    margin-bottom: 0.5em;
-}
-
-/* Simplified Arabic font definition for Word/PDF compatibility */
-@font-face {
-    font-family: 'Simplified Arabic';
-    src: url('path/to/simplified-arabic.ttf') format('truetype'); /* You might need to self-host this font or ensure system availability */
-    /* Fallback if font isn't available on system */
-}
-
-/* Ensure two-character numbers for numbering lists */
-ol.decimal-padded {
-    list-style: none;
-    counter-reset: item;
-}
-ol.decimal-padded li:before {
-    counter-increment: item;
-    content: counters(item, ".") ". "; /* Example: "1. " or "1.1. " for sub-lists */
-    /* Or simply: content: counter(item) ". "; for single level */
-    display: inline-block;
-    width: 2em; /* Adjust as needed for alignment */
-    text-align: left;
-    direction: ltr; /* Ensure numbering is LTR */
-    margin-left: 0.5em; /* Space between number and text */
-}
-
-/* Specific styles for PDF export via html2pdf.js */
-.exporting-pdf .document-content {
-    /* Adjustments for PDF generation if needed */
-    /* For instance, if fonts aren't rendering, try adding font-weight: normal; */
+@media (max-width: 480px) {
+    .preview-actions button {
+        width: 100%; /* Stack buttons on very small screens */
+    }
 }
