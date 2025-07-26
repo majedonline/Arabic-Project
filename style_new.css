@@ -1,7 +1,7 @@
 /* General Body Styles */
 body {
-    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif; /* استخدام Cairo كخط رئيسي و Scheherazade كاحتياطي */
-    direction: rtl; /* Right-to-Left for Arabic */
+    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif;
+    direction: rtl;
     margin: 0;
     padding: 20px;
     background-color: #f4f7f6;
@@ -16,7 +16,7 @@ body {
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     max-width: 900px;
     margin: 30px auto;
-    border-right: 5px solid #4CAF50; /* A touch of color */
+    border-right: 5px solid #4CAF50;
 }
 
 .container.hidden {
@@ -24,7 +24,7 @@ body {
 }
 
 h1, h2, h3, h4 {
-    font-family: 'Scheherazade New', 'Cairo', serif; /* Scheherazade New للعناوين لجمال الخط العربي */
+    font-family: 'Scheherazade New', 'Cairo', serif;
     color: #2c3e50;
     text-align: center;
     margin-bottom: 25px;
@@ -107,7 +107,7 @@ button {
     cursor: pointer;
     font-size: 1.1em;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-left: 10px; /* Adjust margin for RTL */
+    margin-left: 10px;
     font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif;
 }
 
@@ -143,21 +143,21 @@ button:disabled {
 }
 
 #exportPdfBtn {
-    background-color: #e74c3c; /* Red for PDF export */
+    background-color: #e74c3c;
 }
 #exportPdfBtn:hover {
     background-color: #c0392b;
 }
 
 #exportWordBtn {
-    background-color: #27ae60; /* Green for Word export */
+    background-color: #27ae60;
 }
 #exportWordBtn:hover {
     background-color: #229954;
 }
 
 #backToInputBtn {
-    background-color: #f39c12; /* Orange for back button */
+    background-color: #f39c12;
 }
 #backToInputBtn:hover {
     background-color: #e67e22;
@@ -207,7 +207,7 @@ button:disabled {
     background: transparent;
 }
 .question-group-header input[type="text"]:focus {
-    border-color: #ddd; /* Maintain subtle border on focus */
+    border-color: #ddd;
 }
 
 
@@ -264,12 +264,12 @@ button:disabled {
 }
 
 .option-item input[type="radio"] {
-    margin-left: 10px; /* Adjust for RTL */
+    margin-left: 10px;
 }
 
 .option-item input[type="text"] {
     flex-grow: 1;
-    margin-left: 10px; /* Space between input and remove button */
+    margin-left: 10px;
 }
 
 .remove-option-btn {
@@ -291,8 +291,8 @@ button:disabled {
     box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
     min-height: 400px;
     margin-bottom: 30px;
-    direction: rtl; /* Ensure RTL for preview content */
-    text-align: right; /* Ensure text alignment for preview */
+    direction: rtl;
+    text-align: right;
 }
 
 .contest-details {
@@ -303,7 +303,7 @@ button:disabled {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #f0f8ff; /* Light blue background */
+    background-color: #f0f8ff;
 }
 
 .contest-details div {
@@ -314,7 +314,7 @@ button:disabled {
 .contest-details span:first-child {
     font-weight: bold;
     color: #555;
-    margin-left: 5px; /* Space between label and value */
+    margin-left: 5px;
 }
 
 .text-section {
@@ -324,10 +324,10 @@ button:disabled {
     margin-bottom: 25px;
     border-radius: 8px;
     line-height: 1.8;
-    text-align: justify; /* Justify text for better readability */
+    text-align: justify;
 }
 .text-section ol {
-    padding-right: 25px; /* Adjust for RTL numbered lists */
+    padding-right: 25px;
     padding-left: 0;
 }
 .text-section li {
@@ -336,7 +336,7 @@ button:disabled {
 
 p.author-source {
     font-style: italic;
-    text-align: left; /* Align source to the left for Arabic context */
+    text-align: left;
     color: #777;
     margin-top: 15px;
 }
@@ -395,7 +395,7 @@ p.author-source {
     display: flex;
     justify-content: center;
     gap: 15px;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    flex-wrap: wrap;
 }
 
 /* Media Queries for Responsiveness */
@@ -420,7 +420,7 @@ p.author-source {
     }
 
     .contest-info-grid {
-        grid-template-columns: 1fr; /* Stack columns on small screens */
+        grid-template-columns: 1fr;
     }
 
     button {
@@ -430,13 +430,13 @@ p.author-source {
     }
 
     .preview-actions button {
-        width: calc(50% - 10px); /* Two buttons per row */
+        width: calc(50% - 10px);
         margin-bottom: 10px;
     }
 }
 
 @media (max-width: 480px) {
     .preview-actions button {
-        width: 100%; /* Stack buttons on very small screens */
+        width: 100%;
     }
 }
