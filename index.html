@@ -59,9 +59,18 @@
 
             <div class="form-group">
                 <label>إضافة الأسئلة:</label>
-                <div id="questionsContainer">
+                <div id="questionGroupsContainer">
+                    <div class="question-group-wrapper">
+                        <div class="question-group-header">
+                            <input type="text" class="group-title-input" placeholder="عنوان قسم الأسئلة (اختياري)">
+                            <button type="button" class="remove-group-btn">حذف القسم</button>
+                        </div>
+                        <div class="questions-in-group-container">
+                            </div>
+                        <button type="button" class="add-question-to-group-btn">إضافة سؤال لهذا القسم</button>
                     </div>
-                <button id="addQuestionBtn">إضافة سؤال</button>
+                </div>
+                <button id="addQuestionGroupBtn">إضافة قسم أسئلة جديد</button>
             </div>
 
             <button id="previewBtn">معاينة المسابقة</button>
