@@ -332,7 +332,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (data.vocabulary) {
             html += `<div class="vocabulary-section">
-                        <h3>شرحُ المفرداتِ/الحواشي:</h3>
+                        <h3>شرحُ المفرداتِ:</h3>
                         <ul>`;
             const vocabularyLines = data.vocabulary.split('\n').filter(line => line.trim() !== '');
             vocabularyLines.forEach(line => {
