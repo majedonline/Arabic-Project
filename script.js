@@ -429,28 +429,131 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Export to Word (Basic HTML to DOC)
-    exportWordBtn.addEventListener('click', () => {
-        const content = previewContent.innerHTML;
-        const filename = `${contestNameInput.value.trim() || 'مسابقة'}.doc`;
-        const blob = new Blob(['<html dir="rtl" lang="ar"><head><meta charset="UTF-8"><style>',
-                                document.querySelector('link[rel="stylesheet"]').outerHTML, // Include CSS link
-                                'body { font-family: \'Cairo\', \'Scheherazade New\', Arial, sans-serif; direction: rtl; }',
-                                // You might need to inline some critical CSS for Word to render it well
-                                '</style></head><body>',
-                                content,
-                                '</body></html>'], { type: 'application/msword' });
 
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-        alert('تمَّ تصديرُ المسابقةِ إلى ملفِّ Word.');
+exportWordBtn.addEventListener('click', () => {
+    const data = collectFormData(); // نجمع البيانات مرة أخرى
+
+    // إنشاء محتوى الترويسة بـ inline styles وجدول لضمان التنسيق في Word
+    const headerContent = `
+        <div style="direction:rtl; text-align:center; margin-bottom:20px; border:1px solid #ccc; padding:10px; font-family:'Cairo', sans-serif;">
+            <p style="margin:5px 0;"><strong>${data.schoolName || ''}</strong></p>
+            <p style="margin:5px 0;">المادة: <strong>${data.subject || ''}</strong></p>
+            <p style="margin:5px 0;">المعلِّم: <strong>${data.teacherName || ''}</strong></p>
+            <p style="margin:5px 0;">التاريخ: <strong>${data.date || ''}</strong></p>
+            <p style="margin:5px 0;">المدة: <strong>${data.duration || ''}</strong></p>
+            <p style="margin:5px 0;">العلامة الكليَّة: <strong>${data.score || ''}</strong></p>
+            <h2 style="margin-top:15px; margin-bottom:10px; color:#2c3e50;">${data.title || 'مسابقة'}</h2>
+        </div>
+    `;
+
+    // تحويل نص المسابقة إلى قائمة مرقمة إذا كان يحتوي على أسطر
+    let formattedTextInput = '';
+    if (data.text) {
+        const lines = data.text.split('\n').filter(line => line.trim() !== '');
+        if (lines.length > 1) {
+            formattedTextInput = `<ol style="direction:rtl; text-align:right; margin-right:25px;">` +
+                                 lines.map(line => `<li style="margin-bottom:8px;">${line.trim()}</li>`).join('') +
+                                 `</ol>`;
+        } else {
+            formattedTextInput = `<p style="direction:rtl; text-align:justify;">${data.text}</p>`;
+        }
+    }
+
+    // تنسيق المصدر/المؤلف
+    let authorSourceHtml = '';
+    if (data.authorSource) {
+        // إذا كان هناك سطر جديد في المصدر، افصل بينهما بـ <br>
+        authorSourceHtml = `<p style="font-style:italic; text-align:right; color:#777; margin-top:15px; direction:rtl;">${data.authorSource.replace(/\n/g, '<br>')}</p>`;
+    }
+
+    // تنسيق المفردات
+    let vocabularyHtml = '';
+    if (data.vocabulary) {
+        const vocabLines = data.vocabulary.split('\n').filter(line => line.trim() !== '');
+        if (vocabLines.length > 0) {
+            vocabularyHtml = `
+                <div style="background-color:#fdfdfd; border:1px solid #e9e9e9; padding:15px; margin-top:15px; margin-bottom:25px; border-radius:8px; line-height:1.8; text-align:right; direction:rtl; font-family:'Cairo', sans-serif;">
+                    <h3 style="margin-top:0; margin-bottom:10px; border-bottom:1px solid #ddd; padding-bottom:5px;">شرحُ المفرداتِ:</h3>
+                    <ul style="list-style-type:none; padding-right:0; margin:0;">
+                        ${vocabLines.map(line => `<li style="margin-bottom:5px;">${line.trim()}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+    }
+
+
+    let currentQuestionNumber = 1;
+    const questionsHtml = data.questionGroups.map(group => {
+        return group.questions.map(q => {
+            const optionsHtml = (q.type === 'multiple-choice' || q.type === 'true-false') && q.options.length > 0 ?
+                `<ul style="list-style-type:none; padding-right:0; margin-top:10px; direction:rtl; text-align:right;">` +
+                q.options.map(option => `<li style="margin-bottom:5px;"><input type="radio" disabled style="margin-left:10px;"> <label>${option.text}</label></li>`).join('') +
+                `</ul>` : '';
+
+            // تنسيق السؤال والعلامة
+            const questionTextWithScore = `
+                <p style="font-weight:bold; margin-bottom:10px; color:#333; line-height:1.7; text-align:justify; direction:rtl;">
+                    ${currentQuestionNumber++}- ${q.text} <span style="float:left; font-weight:bold; color:#555; margin-right:5px; margin-left:10px;">(${q.score || 1})</span>
+                </p>
+            `;
+
+            return `
+                <div style="margin-bottom:20px; padding-bottom:10px; border-bottom:1px dotted #ccc; direction:rtl;">
+                    ${questionTextWithScore}
+                    ${optionsHtml}
+                </div>
+            `;
+        }).join('');
+    }).join('');
+
+    // المحتوى الكامل لملف Word
+    const content = `
+        <html dir="rtl" lang="ar">
+        <head>
+            <meta charset="UTF-8">
+            <style>
+                /* أنماط أساسية لضمان العرض الصحيح في Word */
+                body { font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif; direction: rtl; }
+                p, div, li, h1, h2, h3, h4 { direction: rtl; text-align: right; }
+                ol, ul { padding-right: 25px; padding-left: 0; }
+                /* قد تحتاج لتعديل هامش الأسئلة يدوياً في Word إذا لم تكن العلامة في المكان الصحيح */
+                /* هذا الجزء هو الأكثر حساسية لتفسير Word */
+                .question .question-text span {
+                    float: left; /* لإبقاء العلامة في أقصى اليسار */
+                    margin-left: 10px; /* لإنشاء مسافة بين العلامة ونهاية النص */
+                    font-weight: bold;
+                    color: #555;
+                }
+            </style>
+        </head>
+        <body>
+            ${headerContent}
+            ${formattedTextInput}
+            ${authorSourceHtml}
+            ${vocabularyHtml}
+
+            ${data.questionGroups.length > 0 ? `
+                <div style="margin-top:30px; border-top:2px dashed #ddd; padding-top:20px;">
+                    <h3 style="text-align:right; color:#3498db; border-bottom:1px solid #eee; padding-bottom:5px; margin-bottom:15px;">الأسئلةُ:</h3>
+                    ${questionsHtml}
+                </div>` : ''}
+        </body>
+        </html>
+    `;
+
+    const blob = new Blob([content], {
+        type: 'application/msword;charset=utf-8' // تأكد من UTF-8
     });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${data.contestNameInput || 'مسابقة'}.doc`; // تغيير الامتداد إلى .doc
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+});
 
     // --- Save/Load Contest Functions ---
 
