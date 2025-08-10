@@ -1,504 +1,151 @@
-/* General Body Styles */
+/* ==============================
+   إعدادات أساسية ومتغيرات
+============================== */
+:root {
+    --primary-color: #005f73;
+    --primary-light: #0a9396;
+    --secondary-color: #94d2bd;
+    --danger-color: #bb3e03;
+    --light-bg: #f8f9fa;
+    --text-color: #222;
+    --font-primary: 'Cairo', sans-serif;
+    --font-secondary: 'Scheherazade New', serif;
+    --radius: 8px;
+    --transition: 0.3s ease;
+}
+
+/* ==============================
+   إعدادات عامة
+============================== */
 body {
-    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif;
-    direction: rtl;
+    font-family: var(--font-primary);
+    color: var(--text-color);
+    background-color: var(--light-bg);
     margin: 0;
     padding: 20px;
-    background-color: #f4f7f6;
-    color: #333;
-    line-height: 1.6;
+}
+
+h1, h2 {
+    font-family: var(--font-secondary);
+    color: var(--primary-color);
+    margin-bottom: 10px;
 }
 
 .container {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    max-width: 900px;
-    margin: 30px auto;
-    border-right: 5px solid #4CAF50;
+    max-width: 1100px;
+    margin: auto;
+    background: white;
+    padding: 20px 30px;
+    border-radius: var(--radius);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
 }
 
-.container.hidden {
-    display: none;
-}
-
-h1, h2, h3, h4 {
-    font-family: 'Scheherazade New', 'Cairo', serif;
-    color: #2c3e50;
-    text-align: center;
-    margin-bottom: 25px;
-    border-bottom: 2px solid #eee;
-    padding-bottom: 10px;
-}
-
-h1 {
-    font-size: 2.2em;
-    color: #4CAF50;
-}
-
-h2 {
-    font-size: 1.8em;
-    color: #3498db;
-}
-
-h3 {
-    font-size: 1.5em;
-    color: #e67e22;
-    text-align: right;
-    margin-right: 15px;
-}
-
-h4 {
-    font-size: 1.3em;
-    color: #8e44ad;
-    text-align: right;
-    margin-right: 15px;
-}
-
-/* Form Group Styles */
+/* ==============================
+   عناصر النماذج
+============================== */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
+label {
     font-weight: bold;
-    color: #555;
+    display: block;
+    margin-bottom: 5px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="date"],
-.form-group input[type="number"],
-.form-group textarea,
-.form-group select {
-    width: calc(100% - 20px);
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
-    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif;
-    transition: border-color 0.3s ease;
-}
-
-.form-group input[type="text"]:focus,
-.form-group input[type="date"]:focus,
-.form-group input[type="number"]:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: #4CAF50;
-    outline: none;
-    box-shadow: 0 0 5px rgba(76, 175, 80, 0.3);
-}
-
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select,
 textarea {
-    resize: vertical;
-    min-height: 80px;
+    width: 100%;
+    padding: 8px 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: var(--radius);
+    transition: border-color var(--transition);
 }
 
-/* Button Styles */
+input:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary-light);
+    outline: none;
+    box-shadow: 0 0 4px rgba(10, 147, 150, 0.3);
+}
+
+/* ==============================
+   تخطيط أقسام المعلومات
+============================== */
+.contest-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+/* ==============================
+   الأزرار
+============================== */
 button {
-    background-color: #4CAF50;
+    background-color: var(--primary-color);
     color: white;
-    padding: 12px 20px;
     border: none;
-    border-radius: 5px;
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: var(--radius);
     cursor: pointer;
-    font-size: 1.1em;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    margin-left: 10px;
-    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif;
+    transition: background-color var(--transition);
 }
 
 button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-}
-
-button:active {
-    background-color: #3e8e41;
-    transform: translateY(0);
+    background-color: var(--primary-light);
 }
 
 button:disabled {
-    background-color: #cccccc;
+    background-color: #aaa;
     cursor: not-allowed;
 }
 
-/* Specific Button Adjustments */
-#previewBtn, #exportPdfBtn, #exportWordBtn, #backToInputBtn {
-    display: block;
-    width: auto;
-    margin: 20px auto;
-    padding: 15px 30px;
-    font-size: 1.2em;
+button.danger {
+    background-color: var(--danger-color);
 }
 
-#previewBtn {
-    background-color: #3498db;
-}
-#previewBtn:hover {
-    background-color: #2980b9;
+button.danger:hover {
+    background-color: #e36414;
 }
 
-#exportPdfBtn {
-    background-color: #e74c3c;
-}
-#exportPdfBtn:hover {
-    background-color: #c0392b;
-}
-
-#exportWordBtn {
-    background-color: #27ae60;
-}
-#exportWordBtn:hover {
-    background-color: #229954;
-}
-
-#backToInputBtn {
-    background-color: #f39c12;
-}
-#backToInputBtn:hover {
-    background-color: #e67e22;
-}
-
-/* Contest Info Grid */
-.contest-info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin-bottom: 25px;
-}
-
-/* Question Group Styles */
-#questionGroupsContainer {
-    border: 1px dashed #ccc;
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-}
-
-.question-group-wrapper {
-    background-color: #f9f9f9;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    padding: 15px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.question-group-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-}
-
-.question-group-header input[type="text"] {
-    flex-grow: 1;
-    margin-left: 10px;
-    font-size: 1.1em;
-    font-weight: bold;
-    color: #4CAF50;
-    border: none;
-    background: transparent;
-}
-.question-group-header input[type="text"]:focus {
-    border-color: #ddd;
-}
-
-
-.questions-in-group-container {
-    margin-top: 15px;
-}
-
-.question-block {
-    background-color: #fff;
-    border: 1px solid #e0e0e0;
-    border-radius: 5px;
-    padding: 15px;
-    margin-bottom: 15px;
-    position: relative;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
-
-.remove-group-btn, .remove-question-btn {
-    background-color: #e74c3c;
-    color: white;
-    padding: 8px 12px;
-    font-size: 0.9em;
-    border-radius: 5px;
-}
-.remove-group-btn:hover, .remove-question-btn:hover {
-    background-color: #c0392b;
-}
-
-.add-question-to-group-btn, .add-option-btn {
-    background-color: #5cb85c;
-    padding: 8px 12px;
-    font-size: 0.9em;
-    margin-top: 10px;
-    display: inline-block;
-}
-.add-question-to-group-btn:hover, .add-option-btn:hover {
-    background-color: #4cae4c;
-}
-
-.options-container {
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px dashed #eee;
-}
-
-.options-list {
-    margin-top: 10px;
-}
-
-.option-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.option-item input[type="radio"] {
-    margin-left: 10px;
-}
-
-.option-item input[type="text"] {
-    flex-grow: 1;
-    margin-left: 10px;
-}
-
-.remove-option-btn {
-    background-color: #f0ad4e;
-    padding: 5px 8px;
-    font-size: 0.8em;
-}
-.remove-option-btn:hover {
-    background-color: #ec971f;
-}
-
-/* Preview Section Styles (for PDF output) */
-#previewContent {
-    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif;
-    padding: 20px;
-    background-color: #ffffff;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
-    min-height: 400px;
-    margin-bottom: 30px;
-    direction: rtl;
-    text-align: right;
-}
-
-/* Page break for PDF/Print */
-.page-break {
-    page-break-after: always;
-}
-
-/* Contest Header in PDF/Word */
-.contest-header-doc {
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 20px;
-    text-align: center; /* لضمان توسيط محتوى الترويسة */
-    direction: rtl; /* للتأكيد على الاتجاه في الوورد */
-    font-family: 'Cairo', 'Scheherazade New', Arial, sans-serif;
-}
-.contest-header-doc h3,
-.contest-header-doc p {
-    margin: 5px 0; /* لتقليل المسافات بين عناصر الترويسة */
-}
-
-
-.contest-details {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
-    margin-bottom: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f0f8ff;
-}
-
-.contest-details div {
-    font-size: 0.95em;
-    color: #444;
-}
-
-.contest-details span:first-child {
-    font-weight: bold;
-    color: #555;
-    margin-left: 5px;
-}
-
-.text-section {
-    background-color: #fdfdfd;
-    border: 1px solid #e9e9e9;
-    padding: 15px;
-    margin-bottom: 25px;
-    border-radius: 8px;
-    line-height: 1.8;
-    text-align: justify;
-}
-.text-section ol {
-    padding-right: 25px;
-    padding-left: 0;
-}
-.text-section li {
-    margin-bottom: 8px;
-}
-
-p.author-source {
-    font-style: italic;
-    text-align: right; /* تم تعديلها لتكون لليمين */
-    color: #777;
-    margin-top: 15px;
-    white-space: pre-line; /* للحفاظ على فواصل الأسطر */
-}
-p.author-name { /* نمط جديد للمؤلف إذا أردت فصله */
-    font-style: italic;
-    text-align: right;
-    color: #777;
-    margin-top: 5px;
-}
-
-.vocabulary-section {
-    background-color: #fdfdfd;
-    border: 1px solid #e9e9e9;
-    padding: 15px;
-    margin-top: 15px;
-    margin-bottom: 25px;
-    border-radius: 8px;
-    line-height: 1.8;
-    text-align: right;
-}
-.vocabulary-section ul {
-    list-style-type: none;
-    padding-right: 0;
-    margin: 0;
-}
-.vocabulary-section li {
-    margin-bottom: 5px;
-}
-
-
-.questions-main-section {
-    margin-top: 30px;
-    border-top: 2px dashed #ddd;
-    padding-top: 20px;
-}
-
-.question-group-in-doc {
-    margin-bottom: 30px;
-}
-
-.question-group-in-doc h4 {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
-    margin-bottom: 15px;
-    font-size: 1.2em;
-    color: #3498db;
-    text-align: right;
-}
-
-.question {
-    margin-bottom: 20px;
-    padding-bottom: 10px;
-    border-bottom: 1px dotted #ccc;
-    position: relative; /* لإظهار العلامة في النهاية */
-}
-
-.question:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-}
-
-.question-text {
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #333;
-    line-height: 1.7;
-    text-align: justify;
-    padding-left: 60px; /* مسافة لعلامة السؤال */
-}
-
-.question-score {
-    float: left; /* ستظهر العلامة في أقصى اليسار */
-    font-weight: bold;
-    color: #555;
-    margin-right: 5px; /* مسافة بين العلامة والنص */
-    position: absolute;
-    left: 0;
-    top: 0;
-    padding-top: 5px; /* لتنسيقها مع بداية النص */
-}
-
-
-.question .options-container-in-doc ul {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 10px;
-    padding-right: 20px; /* مسافة للخيارات */
-}
-
-.question .options-container-in-doc li {
-    margin-bottom: 5px;
-    color: #555;
+/* ==============================
+   أقسام المعاينة
+============================== */
+.hidden {
+    display: none;
 }
 
 .preview-actions {
+    margin-top: 20px;
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
+    gap: 10px;
 }
 
-/* Media Queries for Responsiveness */
-@media (max-width: 768px) {
+/* ==============================
+   تحسين النصوص
+============================== */
+textarea {
+    resize: vertical;
+}
+
+/* ==============================
+   تنسيقات الطباعة
+============================== */
+@media print {
+    body {
+        background: white;
+    }
     .container {
-        padding: 20px;
-        margin: 20px auto;
+        box-shadow: none;
+        border: none;
     }
-
-    h1 {
-        font-size: 1.8em;
-    }
-
-    h2 {
-        font-size: 1.5em;
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-        width: 100%;
-    }
-
-    .contest-info-grid {
-        grid-template-columns: 1fr;
-    }
-
     button {
-        width: 100%;
-        margin-left: 0;
-        margin-bottom: 10px;
-    }
-
-    .preview-actions button {
-        width: calc(50% - 10px);
-        margin-bottom: 10px;
-    }
-}
-
-@media (max-width: 480px) {
-    .preview-actions button {
-        width: 100%;
+        display: none;
     }
 }
