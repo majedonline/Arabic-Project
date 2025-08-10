@@ -13,28 +13,30 @@
     <div id="input-section" class="container">
         <h1>إنشاء المسابقات</h1>
 
+        <!-- حفظ واستعادة المسابقات -->
         <div class="form-group">
             <label for="contestName">اسْمُ المسابقةِ (للحفظِ والاستعادةِ):</label>
-            <input type="text" id="contestName" placeholder="مثال: مسابقةُ في اللغةِ العربيةِ">
-            <button id="saveContestBtn">حفظُ المسابقةِ</button>
+            <input type="text" id="contestName" placeholder="مثال: مسابقةُ في اللغةِ العربيةِ" required autocomplete="off">
+            <button id="saveContestBtn" aria-label="حفظ المسابقة">💾 حفظُ المسابقةِ</button>
             <select id="loadContestSelect">
                 <option value="">استعادةُ مسابقةٍ محفوظةٍ</option>
             </select>
-            <button id="loadContestBtn" disabled>استعادةٌ</button>
+            <button id="loadContestBtn" disabled aria-label="استعادة مسابقة محفوظة">استعادةٌ</button>
         </div>
 
+        <!-- معلومات المسابقة -->
         <div class="form-group contest-info-grid">
             <div>
                 <label for="schoolNameInput">اسْمُ المدرسةِ:</label>
-                <input type="text" id="schoolNameInput">
+                <input type="text" id="schoolNameInput" autocomplete="organization">
             </div>
             <div>
                 <label for="teacherNameInput">اسْمُ الأستاذ:</label>
-                <input type="text" id="teacherNameInput">
+                <input type="text" id="teacherNameInput" autocomplete="name">
             </div>
             <div>
                 <label for="subjectInput">المادةُ:</label>
-                <input type="text" id="subjectInput">
+                <input type="text" id="subjectInput" autocomplete="off">
             </div>
             <div>
                 <label for="dateInput">التاريخُ:</label>
@@ -46,13 +48,14 @@
             </div>
             <div>
                 <label for="scoreInput">العلامةُ الكليَّةُ:</label>
-                <input type="number" id="scoreInput" placeholder="مثال: 20">
+                <input type="number" id="scoreInput" placeholder="مثال: 20" inputmode="numeric" min="1">
             </div>
         </div>
 
+        <!-- عنوان ونص المسابقة -->
         <div class="form-group">
             <label for="titleInput">عنوانُ المسابقةِ:</label>
-            <input type="text" id="titleInput" placeholder="مثال: مسابقةُ في فهمِ المقروءِ">
+            <input type="text" id="titleInput" placeholder="مثال: مسابقةُ في فهمِ المقروءِ" required>
         </div>
 
         <div class="form-group">
@@ -72,26 +75,28 @@
 يعبرُ: يقطعُ"></textarea>
         </div>
 
+        <!-- أقسام الأسئلة -->
         <h2>أقسامُ الأسئلةِ</h2>
-        <div id="questionGroupsContainer">
-            </div>
-        <button id="addQuestionGroupBtn">إضافةُ قسمِ أسئلةٍ جديدٍ</button>
+        <div id="questionGroupsContainer"></div>
+        <button id="addQuestionGroupBtn" aria-label="إضافة قسم أسئلة جديد">➕ إضافةُ قسمِ أسئلةٍ جديدٍ</button>
 
         <hr>
-        <button id="previewBtn">معاينةٌ وتصديرٌ</button>
+        <button id="previewBtn" aria-label="معاينة المسابقة">👁 معاينةٌ وتصديرٌ</button>
     </div>
 
-    <div id="preview-section" class="container hidden">
+    <!-- قسم المعاينة -->
+    <div id="preview-section" class="container hidden" aria-live="polite">
         <h1>معاينةُ المسابقةِ</h1>
-        <div id="previewContent">
-            </div>
+        <div id="previewContent"></div>
         <div class="preview-actions">
-            <button id="backToInputBtn">العودةُ للتعديلِ</button>
-            <button id="exportPdfBtn">تصديرٌ إلى PDF</button>
-            <button id="exportWordBtn">تصديرٌ إلى Word</button>
+            <button id="backToInputBtn">🔙 العودةُ للتعديلِ</button>
+            <button id="exportPdfBtn">📄 تصديرٌ إلى PDF</button>
+            <button id="exportWordBtn">📝 تصديرٌ إلى Word</button>
+            <button id="printBtn">🖨 طباعة</button>
         </div>
     </div>
 
+    <!-- المكتبات الخارجية -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.1/html2pdf.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
